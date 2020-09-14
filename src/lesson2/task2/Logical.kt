@@ -42,7 +42,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
 fun daysInMonth(month: Int, year: Int): Int {
     return if ((month == 1) || (month == 3) || (month == 5) || (month == 7) || (month == 8) || (month == 10) || (month == 12)) {
         31
-    } else if (month != 2){
+    } else if (month != 2) {
         30
     } else {
         if ((year % 400 == 0) || ((year % 100 != 0) && (year % 4 == 0))) {
@@ -74,4 +74,8 @@ fun circleInside(
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = TODO()
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =
+    ((a <= r) && (b <= s)) || ((a <= s) && (b <= r)) ||
+            ((a <= s) && (c <= r)) || ((a <= s) && (c <= r)) ||
+            ((b <= s) && (c <= r)) || ((b <= s) && (c <= r))
+
