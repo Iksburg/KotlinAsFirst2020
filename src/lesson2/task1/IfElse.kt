@@ -6,6 +6,7 @@ import lesson1.task1.discriminant
 import kotlin.math.max
 import kotlin.math.sqrt
 import kotlin.math.min
+import kotlin.math.pow
 
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
 // Максимальное количество баллов = 6
@@ -144,9 +145,33 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if ((max(a, b) < min(c, d)) || (max(c, d) < min(a, b))) {
-        return -1
+    return if (a < c) {
+        if (b < c) {
+            -1
+        } else if (b == c) {
+            0
+        } else if ((b > c) && (b < d)) {
+            b - c
+        } else {
+            d - c
+        }
+    } else if (a == c) {
+        if (b == c) {
+            0
+        } else if ((b > c) && (b < d)) {
+            b - c
+        } else {
+            d - c
+        }
     } else {
-        return 0
+        if (d < a) {
+            -1
+        } else if (d == a) {
+            0
+        } else if ((d > a) && (d < b)) {
+            d - a
+        } else {
+            b - a
+        }
     }
 }
