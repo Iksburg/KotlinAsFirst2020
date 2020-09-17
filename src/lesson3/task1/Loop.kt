@@ -3,6 +3,7 @@
 package lesson3.task1
 
 import kotlin.math.sqrt
+import kotlin.math.abs
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -74,7 +75,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int =
     when {
-        n < 10 -> 1
+        abs(n) < 10 -> 1
         else -> digitNumber(n / 10) + digitNumber(n % 10)
     }
 
