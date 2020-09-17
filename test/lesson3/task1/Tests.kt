@@ -173,6 +173,7 @@ class Tests {
     @Test
     @Tag("3")
     fun revert() {
+        assertEquals(1, revert(1))
         assertEquals(87431, revert(13478))
         assertEquals(0, revert(0))
         assertEquals(3, revert(3))

@@ -181,7 +181,7 @@ fun revert(n: Int): Int {
     var newNumber = 0
     do {
         remainder = number % 10
-        newNumber *= 10 + remainder
+        newNumber = newNumber * 10 + remainder
         number /= 10
     } while (number != 0)
     return newNumber
