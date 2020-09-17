@@ -107,14 +107,14 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var minDigit = n
+    var minNumber = n
     for (i in 2..n / 2) {
         if (n % i == 0) {
-            minDigit = i
+            minNumber = i
             break
         }
     }
-    return minDigit
+    return minNumber
 }
 
 /**
@@ -176,12 +176,12 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
+    var remainder = 0
     var number = n
     var newNumber = 0
-    var modulo = 0
     do {
-        modulo = number % 10
-        newNumber = newNumber * 10 + modulo
+        remainder = number % 10
+        newNumber *= 10 + remainder
         number /= 10
     } while (number != 0)
     return newNumber
