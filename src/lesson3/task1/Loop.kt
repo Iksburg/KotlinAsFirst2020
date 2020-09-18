@@ -176,7 +176,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
-    var remainder = 0
+    var remainder: Int
     var number = n
     var newNumber = 0
     do {
