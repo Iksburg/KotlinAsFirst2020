@@ -90,7 +90,22 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double = TODO()
+): Double {
+    var s = t1 * v1 + t2 * v2 + t3 * v3
+    var t: Double
+    t = when {
+        t3 * v3 < s / 2 -> {
+            t1 + t2 + (s / 2 - t1 * v1 - t2 * v2) / v3
+        }
+        t2 * v2 > s / 2 -> {
+            t1 + (s / 2 - t1 * v1) / v2
+        }
+        else -> {
+            s / 2 / v1
+        }
+    }
+    return t
+}
 
 /**
  * Простая (2 балла)
