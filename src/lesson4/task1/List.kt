@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import kotlin.math.sqrt
+import kotlin.math.pow
 
 // Урок 4: списки
 // Максимальное количество баллов = 12
@@ -120,7 +121,17 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var sum = 0.0
+    return if (v.isEmpty()) {
+        0.0
+    } else {
+        for (element in v) {
+            sum += element.pow(2)
+        }
+        sqrt(sum)
+    }
+}
 
 /**
  * Простая (2 балла)
@@ -162,7 +173,14 @@ fun times(a: List<Int>, b: List<Int>): Int = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int = TODO()
+fun polynom(p: List<Int>, x: Int): Int {
+    var result = 0.0
+    val number = x.toDouble()
+    for ((index, element) in p.withIndex()) {
+        result += number.pow(index) * element
+    }
+    return result.toInt()
+}
 
 /**
  * Средняя (3 балла)
@@ -174,7 +192,14 @@ fun polynom(p: List<Int>, x: Int): Int = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
+fun accumulate(list: MutableList<Int>): MutableList<Int> {
+    var counter = 0
+    for ((index, element) in list.withIndex()) {
+        list[index] += counter
+        counter += element
+    }
+    return list
+}
 
 /**
  * Средняя (3 балла)
@@ -223,7 +248,16 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var degree = digits.size - 1
+    var result = 0.0
+    val newBase = base.toDouble()
+    for (element in digits) {
+        result += element * newBase.pow(degree)
+        degree--
+    }
+    return result.toInt()
+}
 
 /**
  * Сложная (4 балла)

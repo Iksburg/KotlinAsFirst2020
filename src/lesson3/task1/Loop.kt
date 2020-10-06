@@ -4,7 +4,6 @@ package lesson3.task1
 
 import kotlin.math.sqrt
 import kotlin.math.abs
-import kotlin.math.floor
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -269,6 +268,7 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
+
 fun cos(x: Double, eps: Double): Double = TODO()
 
 /**
