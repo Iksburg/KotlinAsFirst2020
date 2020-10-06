@@ -318,4 +318,113 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+
+fun notEmpty(n: String): String {
+    var number = n
+    if (number.isNotEmpty()) {
+        number += " "
+    }
+    return number
+}
+
+fun deleteFirstDigit(n: Int): Int {
+    var number = n
+    var divider = 1
+    while (number / divider > 9) {
+        divider *= 10
+    }
+    number %= divider
+    return number
+}
+
+fun russian(n: Int): String {
+    val unit = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+
+    val firstTen = listOf(
+        "десять",
+        "одиннадцать",
+        "двенадцать",
+        "тринадцать",
+        "четырнадцать",
+        "пятнадцать",
+        "шестнадцать",
+        "семнадцать",
+        "восемнадцать",
+        "девятнадцать"
+    )
+
+    val ten = listOf(
+        "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто"
+    )
+
+    val hundred = listOf(
+        "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот"
+    )
+
+    val thousand = listOf(
+        "одна тысяча",
+        "две тысячи",
+        "три тысячя",
+        "четыре тысячи",
+        "пять тысяч",
+        " шесть тысяч",
+        "семь тысяч",
+        "восемь тысяч",
+        "девять тысяч"
+    )
+
+    var numberInWords = ""
+    var number = n
+
+    if (number == 0) {
+        numberInWords = "нуль"
+    } else {
+        do {
+            when {
+                number > 99999 -> {
+                    numberInWords += if (number / 1000 % 100 == 0) {
+                        hundred[number / 100000 - 1] + " тысяч"
+                    } else {
+                        hundred[number / 100000 - 1]
+                    }
+                }
+                number > 19999 -> {
+                    numberInWords = notEmpty(numberInWords)
+                    numberInWords += if (number / 1000 % 10 == 0) {
+                        ten[number / 10000 - 2] + " тысяч"
+                    } else {
+                        ten[number / 10000 - 2]
+                    }
+                }
+                number > 9999 -> {
+                    numberInWords = notEmpty(numberInWords)
+                    numberInWords += firstTen[number / 1000 - 10] + " тысяч"
+                    number = deleteFirstDigit(number)
+                }
+                number > 999 -> {
+                    numberInWords = notEmpty(numberInWords)
+                    numberInWords += thousand[number / 1000 - 1]
+                }
+                number > 99 -> {
+                    numberInWords = notEmpty(numberInWords)
+                    numberInWords += hundred[number / 100 - 1]
+                }
+                number > 19 -> {
+                    numberInWords = notEmpty(numberInWords)
+                    numberInWords += ten[number / 10 - 2]
+                }
+                number > 9 -> {
+                    numberInWords = notEmpty(numberInWords)
+                    numberInWords += firstTen[number % 10]
+                    number = deleteFirstDigit(number)
+                }
+                else -> {
+                    numberInWords = notEmpty(numberInWords)
+                    numberInWords += unit[number - 1]
+                }
+            }
+            number = deleteFirstDigit(number)
+        } while (number > 1)
+    }
+    return numberInWords
+}
