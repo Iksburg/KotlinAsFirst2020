@@ -424,7 +424,7 @@ fun russian(n: Int): String {
                 }
             }
             number = deleteFirstDigit(number)
-        } while (number > 1)
+        } while (number >= 1)
     }
     return numberInWords
 }
