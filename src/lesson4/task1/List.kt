@@ -399,7 +399,9 @@ fun russian(n: Int): String {
                 number > 9999 -> {
                     numberInWords = notEmpty(numberInWords)
                     numberInWords += firstTen[number / 1000 - 10] + " тысяч"
-                    number = deleteFirstDigit(number)
+                    if (number / 1000 != 10) {
+                        number = deleteFirstDigit(number)
+                    }
                 }
                 number > 999 -> {
                     numberInWords = notEmpty(numberInWords)
