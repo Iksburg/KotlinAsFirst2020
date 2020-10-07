@@ -124,14 +124,10 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  */
 fun abs(v: List<Double>): Double {
     var sum = 0.0
-    return if (v.isEmpty()) {
-        0.0
-    } else {
-        for (element in v) {
-            sum += element.pow(2)
-        }
-        sqrt(sum)
+    for (element in v) {
+        sum += element.pow(2)
     }
+    return sqrt(sum)
 }
 
 /**
@@ -139,13 +135,12 @@ fun abs(v: List<Double>): Double {
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    return if (list.isEmpty()) {
+fun mean(list: List<Double>): Double =
+    if (list.isEmpty()) {
         0.0
     } else {
         list.sum() / list.size
     }
-}
 
 /**
  * Средняя (3 балла)
@@ -194,10 +189,8 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    var counter = 0
-    for ((index, element) in list.withIndex()) {
-        list[index] += counter
-        counter += element
+    for (i in 1 until list.size) {
+        list[i] += list[i - 1]
     }
     return list
 }
@@ -230,22 +223,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String {
-    var divider = 2
-    var number = n
-    var decompositionResult = ""
-    do {
-        while (number % divider == 0) {
-            decompositionResult += divider.toString()
-            number /= divider
-            if (number > 1) {
-                decompositionResult += "*"
-            }
-        }
-        divider++
-    } while (number > 1)
-    return decompositionResult
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя (3 балла)
