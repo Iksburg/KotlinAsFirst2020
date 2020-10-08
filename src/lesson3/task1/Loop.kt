@@ -4,6 +4,7 @@ package lesson3.task1
 
 import kotlin.math.sqrt
 import kotlin.math.abs
+import kotlin.math.PI
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -257,15 +258,26 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
+
+fun subtractionPI(n: Double): Double {
+    var number = n
+    while (number >= 2 * 3.14159) {
+        number -= 2 * PI
+    }
+    return number
+}
+
 fun sin(x: Double, eps: Double): Double {
-    var result = x
-    var nextPartNumber = x
+    var number = subtractionPI(x)
+    var result = number
+    var nextPartNumber = number
     var counter = 2
     var factorial = 1
     var previousFactorial = factorial
+
     while (abs(nextPartNumber) >= eps) {
         factorial *= counter * (counter + 1)
-        nextPartNumber = -nextPartNumber * x * x * previousFactorial / factorial
+        nextPartNumber = -nextPartNumber * number * number * previousFactorial / factorial
         result += nextPartNumber
         counter += 2
         previousFactorial = factorial
@@ -283,7 +295,23 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var number = subtractionPI(x)
+    var result = 1.0
+    var nextPartNumber = 1.0
+    var counter = 1
+    var factorial = 1
+    var previousFactorial = factorial
+
+    while (abs(nextPartNumber) >= eps) {
+        factorial *= counter * (counter + 1)
+        nextPartNumber = -nextPartNumber * number * number * previousFactorial / factorial
+        result += nextPartNumber
+        counter += 2
+        previousFactorial = factorial
+    }
+    return result
+}
 
 /**
  * Сложная (4 балла)
