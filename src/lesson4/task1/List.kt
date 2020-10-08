@@ -287,7 +287,94 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+
+fun deleteFirstDigit(n: Int): Int {
+    var number = n
+    var divider = 1
+    while (number / divider > 9) {
+        divider *= 10
+    }
+    number %= divider
+    return number
+}
+
+fun roman(n: Int): String {
+    val unit = listOf("I", "V",)
+    val ten = listOf("X", "L")
+    val hundred = listOf("C", "D", "M")
+    var romanNumber = ""
+    var number = n
+
+    do {
+        when {
+            number > 999 -> {
+                for (i in 1..number % 1000) {
+                    romanNumber += hundred[2]
+                }
+            }
+            number > 899 -> {
+                romanNumber += hundred[0] + hundred[2]
+            }
+            number > 499 -> {
+                romanNumber += hundred[1]
+                if (number > 599) {
+                    for (i in 1..number % 100 - 5) {
+                        romanNumber += hundred[0]
+                    }
+                }
+            }
+            number > 399 -> {
+                romanNumber += hundred[0] + hundred[1]
+            }
+            number > 99 -> {
+                for (i in 1..number % 100) {
+                    romanNumber += hundred[0]
+                }
+            }
+            number > 89 -> {
+                romanNumber += ten[0] + hundred[0]
+            }
+            number > 49 -> {
+                romanNumber += ten[1]
+                if (number > 59) {
+                    for (i in 1..number % 10 - 5) {
+                        romanNumber += ten[0]
+                    }
+                }
+            }
+            number > 39 -> {
+                romanNumber += ten[0] + ten[1]
+            }
+            number > 9 -> {
+                for (i in 1..number % 10) {
+                    romanNumber += ten[0]
+                }
+            }
+            number == 9 -> {
+                romanNumber += unit[0] + ten[0]
+            }
+            number > 4 -> {
+                romanNumber += unit[1]
+                if (number > 5) {
+                    for (i in 1..number - 5) {
+                        romanNumber += unit[0]
+                    }
+                }
+            }
+            number == 4 -> {
+                romanNumber += unit[0] + unit[1]
+            }
+            else -> {
+                for (i in 1..number) {
+                    romanNumber += unit[0]
+                }
+            }
+        }
+        number = deleteFirstDigit(number)
+    } while (number > 1)
+
+    return romanNumber
+}
 
 /**
  * Очень сложная (7 баллов)
@@ -302,16 +389,6 @@ fun notEmpty(n: String): String {
     if (number.isNotEmpty()) {
         number += " "
     }
-    return number
-}
-
-fun deleteFirstDigit(n: Int): Int {
-    var number = n
-    var divider = 1
-    while (number / divider > 9) {
-        divider *= 10
-    }
-    number %= divider
     return number
 }
 
