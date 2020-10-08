@@ -371,7 +371,7 @@ fun roman(n: Int): String {
             }
         }
         number = deleteFirstDigit(number)
-    } while (number > 1)
+    } while (number >= 1)
 
     return romanNumber
 }
