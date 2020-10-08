@@ -268,7 +268,7 @@ fun subtractionPI(n: Double): Double {
 }
 
 fun sin(x: Double, eps: Double): Double {
-    var number = subtractionPI(x)
+    val number = subtractionPI(x)
     var result = number
     var nextPartNumber = number
     var counter = 2
@@ -296,7 +296,7 @@ fun sin(x: Double, eps: Double): Double {
  */
 
 fun cos(x: Double, eps: Double): Double {
-    var number = subtractionPI(x)
+    val number = subtractionPI(x)
     var result = 1.0
     var nextPartNumber = 1.0
     var counter = 1

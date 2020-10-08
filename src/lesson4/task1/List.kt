@@ -3,7 +3,6 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import lesson1.task1.numberRevert
 import kotlin.math.sqrt
 import kotlin.math.pow
 
@@ -299,7 +298,7 @@ fun deleteFirstDigit(n: Int): Int {
 }
 
 fun roman(n: Int): String {
-    val unit = listOf("I", "V",)
+    val unit = listOf("I", "V")
     val ten = listOf("X", "L")
     val hundred = listOf("C", "D", "M")
     var romanNumber = ""
