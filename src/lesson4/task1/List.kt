@@ -308,7 +308,7 @@ fun roman(n: Int): String {
     do {
         when {
             number > 999 -> {
-                for (i in 1..number % 1000) {
+                for (i in 1..number / 1000) {
                     romanNumber += hundred[2]
                 }
             }
@@ -318,7 +318,7 @@ fun roman(n: Int): String {
             number > 499 -> {
                 romanNumber += hundred[1]
                 if (number > 599) {
-                    for (i in 1..number % 100 - 5) {
+                    for (i in 1..number / 100 - 5) {
                         romanNumber += hundred[0]
                     }
                 }
@@ -327,7 +327,7 @@ fun roman(n: Int): String {
                 romanNumber += hundred[0] + hundred[1]
             }
             number > 99 -> {
-                for (i in 1..number % 100) {
+                for (i in 1..number / 100) {
                     romanNumber += hundred[0]
                 }
             }
@@ -337,7 +337,7 @@ fun roman(n: Int): String {
             number > 49 -> {
                 romanNumber += ten[1]
                 if (number > 59) {
-                    for (i in 1..number % 10 - 5) {
+                    for (i in 1..number / 10 - 5) {
                         romanNumber += ten[0]
                     }
                 }
@@ -346,7 +346,7 @@ fun roman(n: Int): String {
                 romanNumber += ten[0] + ten[1]
             }
             number > 9 -> {
-                for (i in 1..number % 10) {
+                for (i in 1..number / 10) {
                     romanNumber += ten[0]
                 }
             }
