@@ -5,6 +5,7 @@ package lesson3.task1
 import kotlin.math.sqrt
 import kotlin.math.abs
 import kotlin.math.PI
+import kotlin.math.pow
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -270,17 +271,15 @@ fun subtractionPI(n: Double): Double {
 fun sin(x: Double, eps: Double): Double {
     val number = subtractionPI(x)
     var result = number
-    var nextPartNumber = number
-    var counter = 2
+    var numberSign = 1
+    var counter = 3
     var factorial = 1
-    var previousFactorial = factorial
 
-    while (abs(nextPartNumber) >= eps) {
-        factorial *= counter * (counter + 1)
-        nextPartNumber = -nextPartNumber * number * number * previousFactorial / factorial
-        result += nextPartNumber
+    while (number.pow(counter) / factorial >= eps) {
+        factorial *= counter * (counter - 1)
+        numberSign = -numberSign
+        result += numberSign * number.pow(counter) / factorial
         counter += 2
-        previousFactorial = factorial
     }
     return result
 }
