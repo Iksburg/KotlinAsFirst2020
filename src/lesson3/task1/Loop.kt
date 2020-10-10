@@ -265,6 +265,9 @@ fun subtractionPI(n: Double): Double {
     while (number >= 2 * 3.14159) {
         number -= 2 * PI
     }
+    while (number <= -2 * 3.14159) {
+        number += 2 * PI
+    }
     return number
 }
 
