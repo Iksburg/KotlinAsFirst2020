@@ -271,14 +271,14 @@ fun subtractionPI(n: Double): Double {
 fun sin(x: Double, eps: Double): Double {
     val number = subtractionPI(x)
     var result = number
-    var numberSign = 1
-    var counter = 3
-    var factorial = 1
+    var nextPartNumber = number
+    var counter = 2
+    var factorial: Int
 
-    while (number.pow(counter) / factorial >= eps) {
-        factorial *= counter * (counter - 1)
-        numberSign = -numberSign
-        result += numberSign * number.pow(counter) / factorial
+    while (abs(nextPartNumber) >= eps) {
+        factorial = counter * (counter + 1)
+        nextPartNumber = -nextPartNumber * number * number / factorial
+        result += nextPartNumber
         counter += 2
     }
     return result
@@ -299,15 +299,13 @@ fun cos(x: Double, eps: Double): Double {
     var result = 1.0
     var nextPartNumber = 1.0
     var counter = 1
-    var factorial = 1
-    var previousFactorial = factorial
+    var factorial: Int
 
     while (abs(nextPartNumber) >= eps) {
-        factorial *= counter * (counter + 1)
-        nextPartNumber = -nextPartNumber * number * number * previousFactorial / factorial
+        factorial = counter * (counter + 1)
+        nextPartNumber = -nextPartNumber * number * number / factorial
         result += nextPartNumber
         counter += 2
-        previousFactorial = factorial
     }
     return result
 }
