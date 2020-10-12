@@ -5,7 +5,6 @@ package lesson3.task1
 import kotlin.math.sqrt
 import kotlin.math.abs
 import kotlin.math.PI
-import kotlin.math.pow
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -260,19 +259,8 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 
-fun subtractionPI(n: Double): Double {
-    var number = n
-    while (number >= 2 * 3.14159) {
-        number -= 2 * PI
-    }
-    while (number <= -2 * 3.14159) {
-        number += 2 * PI
-    }
-    return number
-}
-
 fun sin(x: Double, eps: Double): Double {
-    val number = subtractionPI(x)
+    val number = x % (2 * PI)
     var result = number
     var nextPartNumber = number
     var counter = 2
@@ -298,7 +286,7 @@ fun sin(x: Double, eps: Double): Double {
  */
 
 fun cos(x: Double, eps: Double): Double {
-    val number = subtractionPI(x)
+    val number = x % (2 * PI)
     var result = 1.0
     var nextPartNumber = 1.0
     var counter = 1
