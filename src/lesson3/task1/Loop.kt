@@ -123,16 +123,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var maxNumber = 1
-    for (i in n / 2 downTo 2) {
-        if (n % i == 0) {
-            maxNumber = i
-            break
-        }
-    }
-    return maxNumber
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая (2 балла)
@@ -193,10 +184,16 @@ fun lcm(m: Int, n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..minOf(m, n)) {
-        if (m % i == 0 && n % i == 0) return false
+    var firstNumber = m
+    var secondNumber = n
+    while (firstNumber > 0 && secondNumber > 0) {
+        if (firstNumber > secondNumber) {
+            firstNumber -= secondNumber
+        } else {
+            secondNumber -= firstNumber
+        }
     }
-    return true
+    return firstNumber == 1
 }
 
 /**
