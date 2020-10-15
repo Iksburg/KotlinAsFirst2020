@@ -301,78 +301,78 @@ fun roman(n: Int): String {
     val unit = listOf("I", "V")
     val ten = listOf("X", "L")
     val hundred = listOf("C", "D", "M")
-    var romanNumber = ""
+    val romanNumber = StringBuilder()
     var number = n
 
     do {
         when {
             number > 999 -> {
                 for (i in 1..number / 1000) {
-                    romanNumber += hundred[2]
+                    romanNumber.append(hundred[2])
                 }
             }
             number > 899 -> {
-                romanNumber += hundred[0] + hundred[2]
+                romanNumber.append(hundred[0] + hundred[2])
             }
             number > 499 -> {
-                romanNumber += hundred[1]
+                romanNumber.append(hundred[1])
                 if (number > 599) {
                     for (i in 1..number / 100 - 5) {
-                        romanNumber += hundred[0]
+                        romanNumber.append(hundred[0])
                     }
                 }
             }
             number > 399 -> {
-                romanNumber += hundred[0] + hundred[1]
+                romanNumber.append(hundred[0] + hundred[1])
             }
             number > 99 -> {
                 for (i in 1..number / 100) {
-                    romanNumber += hundred[0]
+                    romanNumber.append(hundred[0])
                 }
             }
             number > 89 -> {
-                romanNumber += ten[0] + hundred[0]
+                romanNumber.append(ten[0] + hundred[0])
             }
             number > 49 -> {
-                romanNumber += ten[1]
+                romanNumber.append(ten[1])
                 if (number > 59) {
                     for (i in 1..number / 10 - 5) {
-                        romanNumber += ten[0]
+                        romanNumber.append(ten[0])
                     }
                 }
             }
             number > 39 -> {
-                romanNumber += ten[0] + ten[1]
+                romanNumber.append(ten[0] + ten[1])
             }
             number > 9 -> {
                 for (i in 1..number / 10) {
-                    romanNumber += ten[0]
+                    romanNumber.append(ten[0])
                 }
             }
             number == 9 -> {
-                romanNumber += unit[0] + ten[0]
+                romanNumber.append(unit[0] + ten[0])
             }
             number > 4 -> {
-                romanNumber += unit[1]
+                romanNumber.append(unit[1])
                 if (number > 5) {
                     for (i in 1..number - 5) {
-                        romanNumber += unit[0]
+                        romanNumber.append(unit[0])
                     }
                 }
             }
             number == 4 -> {
-                romanNumber += unit[0] + unit[1]
+                romanNumber.append(unit[0] + unit[1])
             }
             else -> {
                 for (i in 1..number) {
-                    romanNumber += unit[0]
+                    romanNumber.append(unit[0])
                 }
             }
         }
         number = deleteFirstDigit(number)
     } while (number >= 1)
 
-    return romanNumber
+    return romanNumber.toString()
 }
 
 /**
@@ -383,12 +383,12 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 
-fun notEmpty(n: String): String {
-    var number = n
-    if (number.isNotEmpty()) {
-        number += " "
+fun notEmpty(n: StringBuilder): String {
+    return if (n.isNotEmpty()) {
+        " "
+    } else {
+        ""
     }
-    return number
 }
 
 fun russian(n: Int): String {
@@ -427,60 +427,64 @@ fun russian(n: Int): String {
         "девять тысяч"
     )
 
-    var numberInWords = ""
+    val numberInWords = StringBuilder()
     var number = n
 
     if (number == 0) {
-        numberInWords = "нуль"
+        numberInWords.append("нуль")
     } else {
         do {
             when {
                 number > 99999 -> {
-                    numberInWords += if (number / 1000 % 100 == 0) {
-                        hundred[number / 100000 - 1] + " тысяч"
-                    } else {
-                        hundred[number / 100000 - 1]
-                    }
+                    numberInWords.append(
+                        if (number / 1000 % 100 == 0) {
+                            hundred[number / 100000 - 1] + " тысяч"
+                        } else {
+                            hundred[number / 100000 - 1]
+                        }
+                    )
                 }
                 number > 19999 -> {
-                    numberInWords = notEmpty(numberInWords)
-                    numberInWords += if (number / 1000 % 10 == 0) {
-                        ten[number / 10000 - 2] + " тысяч"
-                    } else {
-                        ten[number / 10000 - 2]
-                    }
+                    numberInWords.append(notEmpty(numberInWords))
+                    numberInWords.append(
+                        if (number / 1000 % 10 == 0) {
+                            ten[number / 10000 - 2] + " тысяч"
+                        } else {
+                            ten[number / 10000 - 2]
+                        }
+                    )
                 }
                 number > 9999 -> {
-                    numberInWords = notEmpty(numberInWords)
-                    numberInWords += firstTen[number / 1000 - 10] + " тысяч"
+                    numberInWords.append(notEmpty(numberInWords))
+                    numberInWords.append(firstTen[number / 1000 - 10] + " тысяч")
                     if (number / 1000 != 10) {
                         number = deleteFirstDigit(number)
                     }
                 }
                 number > 999 -> {
-                    numberInWords = notEmpty(numberInWords)
-                    numberInWords += thousand[number / 1000 - 1]
+                    numberInWords.append(notEmpty(numberInWords))
+                    numberInWords.append(thousand[number / 1000 - 1])
                 }
                 number > 99 -> {
-                    numberInWords = notEmpty(numberInWords)
-                    numberInWords += hundred[number / 100 - 1]
+                    numberInWords.append(notEmpty(numberInWords))
+                    numberInWords.append(hundred[number / 100 - 1])
                 }
                 number > 19 -> {
-                    numberInWords = notEmpty(numberInWords)
-                    numberInWords += ten[number / 10 - 2]
+                    numberInWords.append(notEmpty(numberInWords))
+                    numberInWords.append(ten[number / 10 - 2])
                 }
                 number > 9 -> {
-                    numberInWords = notEmpty(numberInWords)
-                    numberInWords += firstTen[number % 10]
+                    numberInWords.append(notEmpty(numberInWords))
+                    numberInWords.append(firstTen[number % 10])
                     number = deleteFirstDigit(number)
                 }
                 else -> {
-                    numberInWords = notEmpty(numberInWords)
-                    numberInWords += unit[number - 1]
+                    numberInWords.append(notEmpty(numberInWords))
+                    numberInWords.append(unit[number - 1])
                 }
             }
             number = deleteFirstDigit(number)
         } while (number >= 1)
     }
-    return numberInWords
+    return numberInWords.toString()
 }
