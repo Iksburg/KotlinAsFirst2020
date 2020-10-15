@@ -188,6 +188,13 @@ class Tests {
                 mapOf("Emergency" to "911", "Police" to "02")
             )
         )
+        assertEquals(
+            mapOf("" to "r, ", "O" to ""),
+            mergePhoneBooks(
+                mapOf("" to "r", "O" to ""),
+                mapOf("" to "")
+            )
+        )
     }
 
     @Test

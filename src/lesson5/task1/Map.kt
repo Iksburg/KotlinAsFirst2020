@@ -173,19 +173,16 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val result = mutableMapOf<String, String>()
-    val duplicateKeys = mutableListOf<String>()
-    val duplicateValues = mutableListOf<String>()
     for ((key, value) in mapA) {
         result[key] = value
-        duplicateKeys.add(key)
-        duplicateValues.add(value)
     }
-    for ((key, value) in mapB)
-        if (key in duplicateKeys && value !in duplicateValues) {
+    for ((key, value) in mapB) {
+        if (key in result && result[key] != mapB[key]) {
             result[key] += ", $value"
         } else {
             result[key] = value
         }
+    }
     return result
 }
 
