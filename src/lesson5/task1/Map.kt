@@ -102,9 +102,9 @@ fun buildGrades(grades: Map<String, Int>): MutableMap<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
     for ((key, value) in grades) {
         if (result[value] == null) {
-            result[value] = key.lines()
+            result[value] = key.split("  ")
         } else {
-            result[value] = result[value]!! + key.lines()
+            result[value] = result[value]!! + key.split("  ")
         }
     }
     return result

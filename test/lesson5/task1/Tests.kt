@@ -116,6 +116,11 @@ class Tests {
             buildGrades(mapOf("Марат" to 3, "Семён" to 3, "Михаил" to 3))
                 .mapValues { (_, v) -> v.sorted() }
         )
+        assertEquals(
+            mapOf(1 to listOf("ENyj7@KyO{8/d/k`1K8A\\nlB%\\\\NQl_8X/IXJ4i=SO\\t1Hi4;nnRQdl39LCW&uuLJC720G(veqM2C!uky^ScZt)wr!W-p=8e*2N\\\\JY7y/_b{-vKhT")),
+            buildGrades(mapOf("ENyj7@KyO{8/d/k`1K8A\\nlB%\\\\NQl_8X/IXJ4i=SO\\t1Hi4;nnRQdl39LCW&uuLJC720G(veqM2C!uky^ScZt)wr!W-p=8e*2N\\\\JY7y/_b{-vKhT" to 1))
+                .mapValues { (_, v) -> v.sorted() }
+        )
     }
 
     @Test
