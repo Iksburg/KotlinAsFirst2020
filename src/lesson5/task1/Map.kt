@@ -102,9 +102,9 @@ fun buildGrades(grades: Map<String, Int>): MutableMap<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
     for ((key, value) in grades) {
         if (result[value] == null) {
-            result[value] = key.split(" ")
+            result[value] = key.lines()
         } else {
-            result[value] = result[value]!! + key.split(" ")
+            result[value] = result[value]!! + key.lines()
         }
     }
     return result
@@ -350,6 +350,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     }
     return result.sorted()
 }
+
 /**
  * Очень сложная (8 баллов)
  *
