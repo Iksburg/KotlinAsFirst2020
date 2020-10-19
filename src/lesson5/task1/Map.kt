@@ -101,10 +101,11 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
 fun buildGrades(grades: Map<String, Int>): MutableMap<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
     for ((key, value) in grades) {
-        if (result[value] == null) {
+        val studentGrade = result[value]
+        if (studentGrade == null) {
             result[value] = listOf(key)
         } else {
-            result[value] = result[value]!! + listOf(key)
+            result[value] = studentGrade + listOf(key)
         }
     }
     return result
@@ -213,8 +214,9 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val averageCost = mutableMapOf<String, Double>()
     val count = mutableMapOf<String, Int>()
     for ((key, value) in stockPrices) {
-        if (key in averageCost) {
-            averageCost[key] = averageCost[key]!! + value
+        val sharePrice = averageCost[key]
+        if (key in averageCost && sharePrice != null) {
+            averageCost[key] = sharePrice + value
             count[key] = count[key]!! + 1
         } else {
             averageCost[key] = value
@@ -222,7 +224,9 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
         }
     }
     for ((key) in averageCost) {
-        averageCost[key] = averageCost[key]!! / count[key]!!
+        val sharePrice = averageCost[key]
+        val numberOfShares = count[key]
+        if (sharePrice != null && numberOfShares != null) averageCost[key] = sharePrice / numberOfShares
     }
     return averageCost
 }
