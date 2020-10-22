@@ -101,12 +101,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
 fun buildGrades(grades: Map<String, Int>): MutableMap<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
     for ((key, value) in grades) {
-        val studentGrade = result[value]
-        if (studentGrade == null) {
-            result[value] = listOf(key)
-        } else {
-            result[value] = studentGrade + listOf(key)
-        }
+        result[value] = result[value]?.plus(listOf(key)) ?: listOf(key)
     }
     return result
 }
@@ -122,7 +117,7 @@ fun buildGrades(grades: Map<String, Int>): MutableMap<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((key) in a) {
+    for (key in a.keys) {
         if (a[key] != b[key]) return false
     }
     return true
@@ -144,7 +139,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     val recordsToDelete = mutableListOf<String>()
-    for ((key) in a) {
+    for (key in a.keys) {
         if (a[key] == b[key]) recordsToDelete.add(key)
     }
     for (key in recordsToDelete) {
@@ -161,8 +156,8 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
     val duplicateNames = mutableSetOf<String>()
-    for (element in a) {
-        if (element in b) duplicateNames.add(element)
+    for (element in a.toSet()) {
+        if (element in b.toSet()) duplicateNames.add(element)
     }
     return duplicateNames.toList()
 }
@@ -214,14 +209,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val averageCost = mutableMapOf<String, Double>()
     val count = mutableMapOf<String, Int>()
     for ((key, value) in stockPrices) {
-        val sharePrice = averageCost[key]
-        if (key in averageCost && sharePrice != null) {
-            averageCost[key] = sharePrice + value
-            count[key] = count[key]!! + 1
-        } else {
-            averageCost[key] = value
-            count[key] = 1
-        }
+        averageCost[key] = averageCost[key]?.plus(value) ?: value
+        count[key] = count[key]?.plus(1) ?: 1
     }
     for ((key) in averageCost) {
         val sharePrice = averageCost[key]
