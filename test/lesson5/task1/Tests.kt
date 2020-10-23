@@ -243,6 +243,13 @@ class Tests {
                 "печенье"
             )
         )
+        assertEquals(
+            "",
+            findCheapestStuff(
+                mapOf("" to ("" to 1.7976931348623157e+308)),
+                ""
+            )
+        )
     }
 
     @Test
@@ -320,6 +327,10 @@ class Tests {
     @Test
     @Tag("6")
     fun findSumOfTwo() {
+        assertEquals(
+            Pair(1, 2),
+            findSumOfTwo(listOf(1, 0, 0), 0)
+        )
         assertEquals(
             Pair(0, 1),
             findSumOfTwo(listOf(0, 0), 0)
