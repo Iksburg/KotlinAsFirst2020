@@ -206,6 +206,10 @@ class Tests {
     @Tag("4")
     fun averageStockPrice() {
         assertEquals(
+            mapOf("" to 0.5),
+            averageStockPrice(listOf("" to 0.0, "" to 1.0))
+        )
+        assertEquals(
             mapOf<String, Double>(),
             averageStockPrice(listOf())
         )
@@ -316,6 +320,10 @@ class Tests {
     @Test
     @Tag("6")
     fun findSumOfTwo() {
+        assertEquals(
+            Pair(0, 1),
+            findSumOfTwo(listOf(0, 0), 0)
+        )
         assertEquals(
             Pair(0, 2),
             findSumOfTwo(listOf(1, 2, 3), 4)
