@@ -101,7 +101,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
 fun buildGrades(grades: Map<String, Int>): MutableMap<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
     for ((key, value) in grades) {
-        result[value] = result[value]?.plus(listOf(key)) ?: listOf(key)
+        result[value] = (result[value] ?: emptyList()) + key
     }
     return result
 }
@@ -156,8 +156,9 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
     val duplicateNames = mutableSetOf<String>()
+    val secondList = b.toSet()
     for (element in a.toSet()) {
-        if (element in b.toSet()) duplicateNames.add(element)
+        if (element in secondList) duplicateNames.add(element)
     }
     return duplicateNames.toList()
 }
@@ -209,8 +210,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val averageCost = mutableMapOf<String, Double>()
     val count = mutableMapOf<String, Int>()
     for ((key, value) in stockPrices) {
-        averageCost[key] = averageCost[key]?.plus(value) ?: value
-        count[key] = count[key]?.plus(1) ?: 1
+        averageCost[key] = (averageCost[key] ?: value) + value
+        count[key] = (count[key] ?: 1) + 1
     }
     for ((key) in averageCost) {
         val sharePrice = averageCost[key]
@@ -343,11 +344,10 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var result = Pair(-1, -1)
     val indexedList = mutableMapOf<Int, Int>()
     for (i in list.indices) {
-        indexedList[i] = list[i]
-    }
-    for ((key, value) in indexedList) {
-        if (indexedList.containsValue(number - value) && key != list.indexOf(number - value)) {
-            result = Pair(key, list.indexOf(number - value))
+        indexedList[list[i]] = i
+        if (indexedList.contains(number - list[i]) && i != indexedList[number - list[i]]) {
+            val secondNumber = indexedList[number - list[i]]
+            if (secondNumber != null) result = Pair(i, secondNumber)
             break
         }
     }
