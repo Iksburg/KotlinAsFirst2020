@@ -156,8 +156,9 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
     val duplicateNames = mutableSetOf<String>()
+    val firstList = a.toSet()
     val secondList = b.toSet()
-    for (element in a.toSet()) {
+    for (element in firstList) {
         if (element in secondList) duplicateNames.add(element)
     }
     return duplicateNames.toList()
