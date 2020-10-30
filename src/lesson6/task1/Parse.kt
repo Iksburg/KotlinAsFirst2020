@@ -138,26 +138,21 @@ fun dateDigitToStr(digital: String): String = TODO()
  */
 fun flattenPhoneNumber(phone: String): String {
     val parts = phone.split(" ")
-    return try {
-        val result = StringBuilder()
-        var currentString: String
-        for (part in parts) {
-            currentString = part
-            if (part.contains("(")) {
-                currentString = currentString.replace("(", "")
-            }
-            if (part.contains(")")) {
-                currentString = currentString.replace(")", "")
-            }
-            if (part.contains("-")) {
-                currentString = currentString.replace("-", "")
-            }
-            result.append(currentString)
+    val result = StringBuilder()
+    for (part in parts) {
+        var currentString = part
+        if (currentString == "()") {
+            return ""
         }
-        result.toString()
-    } catch (e: NumberFormatException) {
-        ""
+        currentString = currentString.replace("(", "")
+        currentString = currentString.replace(")", "")
+        currentString = currentString.replace("-", "")
+        if (currentString.isNotEmpty() && currentString.toLongOrNull() == null) {
+            return ""
+        }
+        result.append(currentString)
     }
+    return result.toString()
 }
 
 /**
@@ -223,7 +218,29 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val parts = expression.split(" ")
+    var previousPart = ""
+    var result: Int
+    if ("+" !in parts[0] && "-" !in parts[0]) {
+        result = parts[0].toInt()
+    } else {
+        throw IllegalArgumentException()
+    }
+    for (part in parts) {
+        if (("+" in part || "-" in part) && ("+" in previousPart || "-" in previousPart) ||
+            part.toIntOrNull() != null && previousPart.toIntOrNull() != null
+        ) {
+            throw IllegalArgumentException()
+        } else if (previousPart == "+") {
+            result += part.toInt()
+        } else if (previousPart == "-") {
+            result -= part.toInt()
+        }
+        previousPart = part
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
