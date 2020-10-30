@@ -79,35 +79,34 @@ fun main() {
  */
 fun dateStrToDigit(str: String): String {
     val calendar = mapOf(
-        "января" to ".01.",
-        "февраля" to ".02.",
-        "марта" to ".03.",
-        "апреля" to ".04.",
-        "мая" to ".05.",
-        "июня" to ".06.",
-        "июля" to ".07.",
-        "августа" to ".08.",
-        "сентября" to ".09.",
-        "октбяря" to ".10.",
-        "ноября" to ".11.",
-        "декабря" to ".12."
+        "января" to "1",
+        "февраля" to "2",
+        "марта" to "3",
+        "апреля" to "4",
+        "мая" to "5",
+        "июня" to "6",
+        "июля" to "7",
+        "августа" to "8",
+        "сентября" to "9",
+        "октбяря" to "10",
+        "ноября" to "11",
+        "декабря" to "12"
     )
     val parts = str.split(" ")
-    val result = StringBuilder()
-    for (part in parts) {
-        when {
-            parts.size != 3 -> {
-                return ""
-            }
-            part in calendar -> {
-                result.append(calendar[part])
-            }
-            else -> {
-                result.append(part)
-            }
-        }
+    if (parts.size != 3) {
+        return ""
     }
-    return result.toString()
+    val month = calendar[parts[1]]
+    return if (month != null &&
+        (month in listOf("1", "3", "5", "7", "8", "10", "12") && parts[0].toInt() < 32
+                || month in listOf("4", "6", "9", "11") && parts[0].toInt() < 31
+                || month == "2" && (parts[2].toInt() % 4 == 0 && parts[0].toInt() < 30
+                || parts[2].toInt() % 4 != 0 && parts[0].toInt() < 29))
+    ) {
+        String.format("%02d.%02d.%04d", parts[0].toInt(), month.toInt(), parts[2].toInt())
+    } else {
+        ""
+    }
 }
 
 /**
@@ -147,7 +146,7 @@ fun flattenPhoneNumber(phone: String): String {
         currentString = currentString.replace("(", "")
         currentString = currentString.replace(")", "")
         currentString = currentString.replace("-", "")
-        if (currentString.isNotEmpty() && currentString.toLongOrNull() == null) {
+        if (currentString.isNotEmpty() && currentString.toIntOrNull() == null) {
             return ""
         }
         result.append(currentString)
