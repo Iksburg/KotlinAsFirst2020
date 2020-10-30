@@ -100,8 +100,8 @@ fun dateStrToDigit(str: String): String {
     return if (month != null &&
         (month in listOf("1", "3", "5", "7", "8", "10", "12") && parts[0].toInt() < 32
                 || month in listOf("4", "6", "9", "11") && parts[0].toInt() < 31
-                || month == "2" && (parts[2].toInt() % 4 == 0 && parts[0].toInt() < 30
-                || parts[2].toInt() % 4 != 0 && parts[0].toInt() < 29))
+                || month == "2" && (parts[2].toInt() % 4 != 0 && parts[0].toInt() < 29) ||
+                (parts[2].toInt() % 400 == 0 || parts[2].toInt() % 100 != 0 && parts[2].toInt() % 4 == 0) && parts[0].toInt() < 30)
     ) {
         String.format("%02d.%02d.%d", parts[0].toInt(), month.toInt(), parts[2].toInt())
     } else {
