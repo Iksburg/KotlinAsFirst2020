@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import java.lang.StringBuilder
+
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -75,7 +77,38 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val calendar = mapOf(
+        "января" to ".01.",
+        "февраля" to ".02.",
+        "марта" to ".03.",
+        "апреля" to ".04.",
+        "мая" to ".05.",
+        "июня" to ".06.",
+        "июля" to ".07.",
+        "августа" to ".08.",
+        "сентября" to ".09.",
+        "октбяря" to ".10.",
+        "ноября" to ".11.",
+        "декабря" to ".12."
+    )
+    val parts = str.split(" ")
+    val result = StringBuilder()
+    for (part in parts) {
+        when {
+            parts.size != 3 -> {
+                return ""
+            }
+            part in calendar -> {
+                result.append(calendar[part])
+            }
+            else -> {
+                result.append(part)
+            }
+        }
+    }
+    return result.toString()
+}
 
 /**
  * Средняя (4 балла)
@@ -103,7 +136,29 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val parts = phone.split(" ")
+    return try {
+        val result = StringBuilder()
+        var currentString: String
+        for (part in parts) {
+            currentString = part
+            if (part.contains("(")) {
+                currentString = currentString.replace("(", "")
+            }
+            if (part.contains(")")) {
+                currentString = currentString.replace(")", "")
+            }
+            if (part.contains("-")) {
+                currentString = currentString.replace("-", "")
+            }
+            result.append(currentString)
+        }
+        result.toString()
+    } catch (e: NumberFormatException) {
+        ""
+    }
+}
 
 /**
  * Средняя (5 баллов)
@@ -141,7 +196,23 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val parts = jumps.split(" ")
+    return try {
+        var maxResult = -1
+        var previousResult = -1
+        for (part in parts) {
+            if (part == "+" && previousResult > maxResult) {
+                maxResult = previousResult
+            } else if ("-" !in part && "%" !in part) {
+                previousResult = part.toInt()
+            }
+        }
+        maxResult
+    } catch (e: NumberFormatException) {
+        -1
+    }
+}
 
 /**
  * Сложная (6 баллов)
