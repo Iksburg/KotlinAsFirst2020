@@ -63,7 +63,9 @@ Basic, Ruby, Swift.
         deleteMarked("input/delete_in1.txt", "temp.txt")
         assertFileContent(
             "temp.txt",
-            """ЩЫ, Щы  Щы -
+            """Задачи _надо_ решать правильно,
+
+и не надо при этом никуда торопиться___
             """.trimIndent()
         )
         File("temp.txt").delete()
