@@ -72,7 +72,7 @@ fun deleteMarked(inputName: String, outputName: String) {
                 continue
             }
         }
-        for (word in line.split(Regex("\\s+"))) {
+        for (word in line.split(" ")) {
             if (currentLineLength != 0) {
                 writer.write(" ")
             }
