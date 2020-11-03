@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.text.first as first
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -63,7 +64,25 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var currentLineLength = 0
+    for (line in File(inputName).readLines()) {
+        if (line.isNotEmpty()) {
+            if (line.first() == '_') {
+                continue
+            }
+        }
+        for (word in line.split(Regex("\\s+"))) {
+            if (currentLineLength != 0) {
+                writer.write(" ")
+            }
+            writer.write(word)
+            currentLineLength += word.length
+        }
+        writer.newLine()
+        currentLineLength = 0
+    }
+    writer.close()
 }
 
 /**
