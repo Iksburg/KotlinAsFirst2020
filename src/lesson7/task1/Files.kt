@@ -3,7 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import kotlin.text.first as first
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -65,22 +64,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun deleteMarked(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    var currentLineLength = 0
     for (line in File(inputName).readLines()) {
-        if (line.isNotEmpty()) {
-            if (line.first() == '_') {
-                continue
-            }
+        if (line.firstOrNull() == '_') {
+            continue
         }
-        for (word in line.split(" ")) {
-            if (currentLineLength != 0) {
-                writer.write(" ")
-            }
-            writer.write(word)
-            currentLineLength += word.length
-        }
+        writer.write(line)
         writer.newLine()
-        currentLineLength = 0
     }
     writer.close()
 }
@@ -97,20 +86,15 @@ fun deleteMarked(inputName: String, outputName: String) {
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val text = File(inputName).readText()
     val result = mutableMapOf<String, Int>()
-    var count = 0
     for (element in substrings) {
-        val regex = "\\$element".toRegex(RegexOption.IGNORE_CASE)
+        val regex = Regex("\\$element", RegexOption.IGNORE_CASE)
         var nextMatch = regex.find(text)
+        var count = 0
         while (nextMatch != null) {
             count += 1
-            nextMatch = if (nextMatch.range.last != nextMatch.range.first) {
-                regex.find(text, nextMatch.range.last)
-            } else {
-                nextMatch.next()
-            }
+            nextMatch = regex.find(text, nextMatch.range.first + 1)
         }
         result[element] = count
-        count = 0
     }
     return result
 }

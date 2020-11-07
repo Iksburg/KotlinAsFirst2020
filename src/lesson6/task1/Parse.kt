@@ -2,6 +2,7 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
 import java.lang.StringBuilder
 
 
@@ -77,33 +78,31 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+val calendar = mapOf(
+    "января" to 1,
+    "февраля" to 2,
+    "марта" to 3,
+    "апреля" to 4,
+    "мая" to 5,
+    "июня" to 6,
+    "июля" to 7,
+    "августа" to 8,
+    "сентября" to 9,
+    "октября" to 10,
+    "ноября" to 11,
+    "декабря" to 12
+)
+
 fun dateStrToDigit(str: String): String {
-    val calendar = mapOf(
-        "января" to "1",
-        "февраля" to "2",
-        "марта" to "3",
-        "апреля" to "4",
-        "мая" to "5",
-        "июня" to "6",
-        "июля" to "7",
-        "августа" to "8",
-        "сентября" to "9",
-        "октября" to "10",
-        "ноября" to "11",
-        "декабря" to "12"
-    )
     val parts = str.split(" ")
+    val day = parts[0].toInt()
+    val month = calendar[parts[1]]
+    val year = parts[2].toInt()
     if (parts.size != 3) {
         return ""
     }
-    val month = calendar[parts[1]]
-    return if (month != null &&
-        (month in listOf("1", "3", "5", "7", "8", "10", "12") && parts[0].toInt() < 32
-                || month in listOf("4", "6", "9", "11") && parts[0].toInt() < 31
-                || month == "2" && (parts[2].toInt() % 4 != 0 && parts[0].toInt() < 29) ||
-                (parts[2].toInt() % 400 == 0 || parts[2].toInt() % 100 != 0 && parts[2].toInt() % 4 == 0) && parts[0].toInt() < 30)
-    ) {
-        String.format("%02d.%02d.%d", parts[0].toInt(), month.toInt(), parts[2].toInt())
+    return if (month != null && daysInMonth(month, year) >= day) {
+        String.format("%02d.%02d.%d", day, month, year)
     } else {
         ""
     }
