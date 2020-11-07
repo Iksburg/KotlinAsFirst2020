@@ -98,10 +98,10 @@ fun dateStrToDigit(str: String): String {
     if (parts.size != 3) {
         return ""
     }
-    val day = parts[0].toInt()
+    val day = parts[0].toIntOrNull()
     val month = calendar[parts[1]]
-    val year = parts[2].toInt()
-    return if (month != null && daysInMonth(month, year) >= day) {
+    val year = parts[2].toIntOrNull()
+    return if (day != null && month != null && year != null && daysInMonth(month, year) >= day) {
         String.format("%02d.%02d.%d", day, month, year)
     } else {
         ""
