@@ -113,7 +113,59 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var wrongCharacter: String? = null
+    for (line in File(inputName).readLines()) {
+        for (i in line.indices) {
+            if (wrongCharacter != null) {
+                writer.write(wrongCharacter)
+                wrongCharacter = null
+            } else {
+                writer.write(line[i].toString())
+            }
+            if ((line[i].equals('ж', true) ||
+                        line[i].equals('ч', true) ||
+                        line[i].equals('ш', true) ||
+                        line[i].equals('щ', true))
+                && line[i + 1].equals('ы', true)
+            ) {
+                wrongCharacter = if (line[i + 1].isUpperCase()) {
+                    "И"
+                } else {
+                    "и"
+
+                }
+            }
+            if ((line[i].equals('ж', true) ||
+                        line[i].equals('ч', true) ||
+                        line[i].equals('ш', true) ||
+                        line[i].equals('щ', true))
+                && line[i + 1].equals('я', true)
+            ) {
+                wrongCharacter = if (line[i + 1].isUpperCase()) {
+                    "А"
+                } else {
+                    "а"
+
+                }
+            }
+            if ((line[i].equals('ж', true) ||
+                        line[i].equals('ч', true) ||
+                        line[i].equals('ш', true) ||
+                        line[i].equals('щ', true))
+                && line[i + 1].equals('ю', true)
+            ) {
+                wrongCharacter = if (line[i + 1].isUpperCase()) {
+                    "У"
+                } else {
+                    "у"
+
+                }
+            }
+        }
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
