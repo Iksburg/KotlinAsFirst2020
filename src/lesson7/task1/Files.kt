@@ -116,13 +116,10 @@ fun sibilants(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var wrongCharacter: String? = null
     for (line in File(inputName).readLines()) {
-        for (i in line.indices) {
-            if (wrongCharacter != null) {
-                writer.write(wrongCharacter)
-                wrongCharacter = null
-            } else {
-                writer.write(line[i].toString())
-            }
+        if (line.isNotEmpty()) {
+            writer.write(line[0].toString())
+        }
+        for (i in 0..line.length - 2) {
             if ((line[i].equals('ж', true) ||
                         line[i].equals('ч', true) ||
                         line[i].equals('ш', true) ||
@@ -161,6 +158,12 @@ fun sibilants(inputName: String, outputName: String) {
                     "у"
 
                 }
+            }
+            if (wrongCharacter != null) {
+                writer.write(wrongCharacter)
+                wrongCharacter = null
+            } else {
+                writer.write(line[i + 1].toString())
             }
         }
         writer.newLine()

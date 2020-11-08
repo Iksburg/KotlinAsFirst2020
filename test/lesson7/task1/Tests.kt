@@ -94,7 +94,7 @@ Basic, Ruby, Swift.
         sibilants("input/sibilants_in2.txt", "temp.txt")
         assertFileContent(
             "temp.txt",
-            """ааажажжжж\n"""
+            """ааажажжжж"""
         )
         sibilants("input/sibilants_in1.txt", "temp.txt")
         assertFileContent(
