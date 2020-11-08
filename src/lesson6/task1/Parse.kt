@@ -220,10 +220,10 @@ fun plusMinus(expression: String): Int {
     val parts = expression.split(" ")
     var previousPart = ""
     var result: Int
-    if ("+" !in parts[0] && "-" !in parts[0]) {
-        result = parts[0].toInt()
-    } else {
+    if ("+" in parts[0] || "-" in parts[0] || expression.last() == ' ') {
         throw IllegalArgumentException()
+    } else {
+        result = parts[0].toInt()
     }
     for (part in parts) {
         if (("+" in part || "-" in part) && ("+" in previousPart || "-" in previousPart) ||

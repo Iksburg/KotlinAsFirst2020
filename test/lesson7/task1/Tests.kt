@@ -91,6 +91,11 @@ Basic, Ruby, Swift.
     @Test
     @Tag("12")
     fun sibilants() {
+        sibilants("input/sibilants_in2.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            """ааажажжжж\n"""
+        )
         sibilants("input/sibilants_in1.txt", "temp.txt")
         assertFileContent(
             "temp.txt",
