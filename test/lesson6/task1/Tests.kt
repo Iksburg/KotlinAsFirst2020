@@ -95,6 +95,7 @@ class Tests {
     @Test
     @Tag("6")
     fun plusMinus() {
+        assertThrows(IllegalArgumentException::class.java) { plusMinus("") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("1 ") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 + 12 6") }
         assertEquals(4, plusMinus("2 + 2"))
