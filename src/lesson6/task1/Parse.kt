@@ -217,28 +217,23 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    if (expression.isEmpty()) {
-        throw IllegalArgumentException()
-    }
-    val parts = expression.split(" ")
-    var previousPart = ""
-    var result: Int
-    if ("+" in parts[0] || "-" in parts[0] || expression.last() == ' ') {
-        throw IllegalArgumentException()
-    } else {
-        result = parts[0].toInt()
-    }
-    for (part in parts) {
-        if (("+" in part || "-" in part) && ("+" in previousPart || "-" in previousPart) ||
-            part.toIntOrNull() != null && previousPart.toIntOrNull() != null
-        ) {
-            throw IllegalArgumentException()
-        } else if (previousPart == "+") {
-            result += part.toInt()
-        } else if (previousPart == "-") {
-            result -= part.toInt()
+    val listOfNumbers = mutableListOf<Int>()
+    val listOfSign = mutableListOf<String>()
+    for (part in expression.split(" ")) {
+        if (part.toIntOrNull() != null && !part.contains("+") && !part.contains("-")) {
+            listOfNumbers.add(part.toInt())
+        } else {
+            listOfSign.add(part)
         }
-        previousPart = part
+    }
+    if (listOfNumbers.size != listOfSign.size + 1) throw IllegalArgumentException()
+    var result = listOfNumbers[0]
+    for (i in 0 until listOfSign.size) {
+        when {
+            listOfSign[i] == "+" -> result += listOfNumbers[i + 1]
+            listOfSign[i] == "-" -> result -= listOfNumbers[i + 1]
+            else -> throw IllegalArgumentException()
+        }
     }
     return result
 }
