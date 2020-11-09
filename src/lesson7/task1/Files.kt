@@ -127,7 +127,6 @@ fun sibilants(inputName: String, outputName: String) {
                     "И"
                 } else {
                     "и"
-
                 }
             }
             if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
@@ -137,7 +136,6 @@ fun sibilants(inputName: String, outputName: String) {
                     "А"
                 } else {
                     "а"
-
                 }
             }
             if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
@@ -147,7 +145,6 @@ fun sibilants(inputName: String, outputName: String) {
                     "У"
                 } else {
                     "у"
-
                 }
             }
             if (wrongCharacter != null) {
