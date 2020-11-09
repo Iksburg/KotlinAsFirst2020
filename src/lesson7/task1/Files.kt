@@ -120,10 +120,7 @@ fun sibilants(inputName: String, outputName: String) {
             writer.write(line[0].toString())
         }
         for (i in 0..line.length - 2) {
-            if ((line[i].equals('ж', true) ||
-                        line[i].equals('ч', true) ||
-                        line[i].equals('ш', true) ||
-                        line[i].equals('щ', true))
+            if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
                 && line[i + 1].equals('ы', true)
             ) {
                 wrongCharacter = if (line[i + 1].isUpperCase()) {
@@ -133,10 +130,7 @@ fun sibilants(inputName: String, outputName: String) {
 
                 }
             }
-            if ((line[i].equals('ж', true) ||
-                        line[i].equals('ч', true) ||
-                        line[i].equals('ш', true) ||
-                        line[i].equals('щ', true))
+            if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
                 && line[i + 1].equals('я', true)
             ) {
                 wrongCharacter = if (line[i + 1].isUpperCase()) {
@@ -146,10 +140,7 @@ fun sibilants(inputName: String, outputName: String) {
 
                 }
             }
-            if ((line[i].equals('ж', true) ||
-                        line[i].equals('ч', true) ||
-                        line[i].equals('ш', true) ||
-                        line[i].equals('щ', true))
+            if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
                 && line[i + 1].equals('ю', true)
             ) {
                 wrongCharacter = if (line[i + 1].isUpperCase()) {
