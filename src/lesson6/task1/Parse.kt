@@ -95,9 +95,7 @@ val calendar = mapOf(
 
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
-    if (parts.size != 3) {
-        return ""
-    }
+    if (parts.size != 3) return ""
     val day = parts[0].toIntOrNull()
     val month = calendar[parts[1]]
     val year = parts[2].toIntOrNull()
@@ -139,15 +137,11 @@ fun flattenPhoneNumber(phone: String): String {
     val result = StringBuilder()
     for (part in parts) {
         var currentString = part
-        if (currentString == "()") {
-            return ""
-        }
+        if (currentString == "()") return ""
         currentString = currentString.replace("(", "")
         currentString = currentString.replace(")", "")
         currentString = currentString.replace("-", "")
-        if (currentString.isNotEmpty() && currentString.toIntOrNull() == null) {
-            return ""
-        }
+        if (currentString.isNotEmpty() && currentString.toIntOrNull() == null) return ""
         result.append(currentString)
     }
     return result.toString()
@@ -168,9 +162,7 @@ fun bestLongJump(jumps: String): Int {
     return try {
         var maxResult = -1
         for (part in parts) {
-            if (part != "-" && part != "%" && part.toInt() > maxResult) {
-                maxResult = part.toInt()
-            }
+            if (part != "-" && part != "%" && part.toInt() > maxResult) maxResult = part.toInt()
         }
         maxResult
     } catch (e: NumberFormatException) {

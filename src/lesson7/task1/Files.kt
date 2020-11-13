@@ -65,9 +65,7 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
 fun deleteMarked(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     for (line in File(inputName).readLines()) {
-        if (line.firstOrNull() == '_') {
-            continue
-        }
+        if (line.firstOrNull() == '_') continue
         writer.write(line)
         writer.newLine()
     }
@@ -91,7 +89,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
         var nextMatch = regex.find(text)
         var count = 0
         while (nextMatch != null) {
-            count += 1
+            count++
             nextMatch = regex.find(text, nextMatch.range.first + 1)
         }
         result[element] = count
@@ -116,9 +114,7 @@ fun sibilants(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var wrongCharacter: String? = null
     for (line in File(inputName).readLines()) {
-        if (line.isNotEmpty()) {
-            writer.write(line[0].toString())
-        }
+        if (line.isNotEmpty()) writer.write(line[0].toString())
         for (i in 0..line.length - 2) {
             if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
                 && line[i + 1].equals('ы', true)
@@ -177,7 +173,36 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var maxLineLength = 0
+    var maxLineCenter = 0
+    var firstIndexLine = -1
+    var lastIndexLine = 0
+    var lineCenter: Int
+    var newString: String
+    for (line in File(inputName).readLines()) {
+        if (line.length > maxLineLength) {
+            maxLineLength = line.length
+            maxLineCenter = line.lastIndex / 2
+        }
+    }
+    for (line in File(inputName).readLines()) {
+        for (i in line.indices) {
+            if (line[i] != ' ' && firstIndexLine == -1) firstIndexLine = i
+            if (line[i] != ' ') lastIndexLine = i
+        }
+        lineCenter = lastIndexLine - (lastIndexLine - firstIndexLine) / 2
+        newString = when {
+            lineCenter == maxLineCenter -> line
+            lineCenter > maxLineCenter -> line.drop(firstIndexLine - 1)
+            else -> line.padStart(line.length + maxLineCenter - lineCenter)
+        }
+        writer.write(newString)
+        writer.newLine()
+        firstIndexLine = -1
+        lastIndexLine = 0
+    }
+    writer.close()
 }
 
 /**

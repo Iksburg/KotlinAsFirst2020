@@ -290,9 +290,7 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
 fun deleteFirstDigit(n: Int): Int {
     var number = n
     var divider = 1
-    while (number / divider > 9) {
-        divider *= 10
-    }
+    while (number / divider > 9) divider *= 10
     number %= divider
     return number
 }
