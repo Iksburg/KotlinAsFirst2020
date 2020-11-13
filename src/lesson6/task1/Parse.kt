@@ -211,12 +211,17 @@ fun bestHighJump(jumps: String): Int {
 fun plusMinus(expression: String): Int {
     val listOfNumbers = mutableListOf<Int>()
     val listOfSign = mutableListOf<String>()
+    var previousPart = ""
     for (part in expression.split(" ")) {
+        if ((part.toIntOrNull() != null && previousPart.toIntOrNull() != null)
+            || (part.toIntOrNull() == null && previousPart.toIntOrNull() == null)
+        ) throw IllegalArgumentException()
         if (part.toIntOrNull() != null && !part.contains("+") && !part.contains("-")) {
             listOfNumbers.add(part.toInt())
         } else {
             listOfSign.add(part)
         }
+        previousPart = part
     }
     if (listOfNumbers.size != listOfSign.size + 1) throw IllegalArgumentException()
     var result = listOfNumbers[0]

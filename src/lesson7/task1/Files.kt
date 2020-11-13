@@ -3,6 +3,8 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.text.RegexOption.IGNORE_CASE
+import kotlin.text.RegexOption.LITERAL
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -85,7 +87,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val text = File(inputName).readText()
     val result = mutableMapOf<String, Int>()
     for (element in substrings) {
-        val regex = Regex("\\$element", RegexOption.IGNORE_CASE)
+        val regex = Regex(element, setOf(LITERAL, IGNORE_CASE))
         var nextMatch = regex.find(text)
         var count = 0
         while (nextMatch != null) {
@@ -111,48 +113,34 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    var wrongCharacter: String? = null
-    for (line in File(inputName).readLines()) {
-        if (line.isNotEmpty()) writer.write(line[0].toString())
-        for (i in 0..line.length - 2) {
-            if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
-                && line[i + 1].equals('ы', true)
-            ) {
-                wrongCharacter = if (line[i + 1].isUpperCase()) {
-                    "И"
+    var wrongCharacter: Char? = null
+    val mapOfCorrection = mapOf(
+        'ы' to 'и',
+        'Ы' to 'И',
+        'я' to 'а',
+        'Я' to 'А',
+        'ю' to 'у',
+        'Ю' to 'У',
+    )
+    File(outputName).bufferedWriter().use {
+        for (line in File(inputName).readLines()) {
+            if (line.isNotEmpty()) it.write(line[0].toString())
+            for (i in 0..line.length - 2) {
+                if (listOf('ж', 'ч', 'ш', 'щ').contains(line[i].toLowerCase())
+                    && mapOfCorrection.contains(line[i + 1])
+                ) {
+                    wrongCharacter = mapOfCorrection[line[i + 1]]
+                }
+                if (wrongCharacter != null) {
+                    it.write(wrongCharacter.toString())
+                    wrongCharacter = null
                 } else {
-                    "и"
+                    it.write(line[i + 1].toString())
                 }
             }
-            if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
-                && line[i + 1].equals('я', true)
-            ) {
-                wrongCharacter = if (line[i + 1].isUpperCase()) {
-                    "А"
-                } else {
-                    "а"
-                }
-            }
-            if ((listOf('ж', 'ч', 'ш', 'щ').contains(line[i]) || listOf('Ж', 'Ч', 'Ш', 'Щ').contains(line[i]))
-                && line[i + 1].equals('ю', true)
-            ) {
-                wrongCharacter = if (line[i + 1].isUpperCase()) {
-                    "У"
-                } else {
-                    "у"
-                }
-            }
-            if (wrongCharacter != null) {
-                writer.write(wrongCharacter)
-                wrongCharacter = null
-            } else {
-                writer.write(line[i + 1].toString())
-            }
+            it.newLine()
         }
-        writer.newLine()
     }
-    writer.close()
 }
 
 /**
@@ -175,25 +163,25 @@ fun sibilants(inputName: String, outputName: String) {
 fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var maxLineLength = 0
-    var maxLineCenter = 0
     var firstIndexLine = -1
     var lastIndexLine = 0
     var lineCenter: Int
     var newString: String
     for (line in File(inputName).readLines()) {
-        if (line.length > maxLineLength) {
-            maxLineLength = line.length
-            maxLineCenter = line.lastIndex / 2
-        }
+        if (line.length > maxLineLength) maxLineLength = line.length
     }
+    val maxLineCenter = (maxLineLength - 1) / 2
     for (line in File(inputName).readLines()) {
         for (i in line.indices) {
-            if (line[i] != ' ' && firstIndexLine == -1) firstIndexLine = i
-            if (line[i] != ' ') lastIndexLine = i
+            if (line[i] != ' ' && firstIndexLine == -1) {
+                firstIndexLine = i
+            } else {
+                lastIndexLine = i
+            }
         }
         lineCenter = lastIndexLine - (lastIndexLine - firstIndexLine) / 2
         newString = when {
-            lineCenter == maxLineCenter -> line
+            lineCenter == maxLineCenter -> line.trim()
             lineCenter > maxLineCenter -> line.drop(firstIndexLine - 1)
             else -> line.padStart(line.length + maxLineCenter - lineCenter)
         }
