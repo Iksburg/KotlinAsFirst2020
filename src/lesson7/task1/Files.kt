@@ -164,34 +164,27 @@ fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var maxLineLength = 0
     var firstIndexLine = -1
-    var lastIndexLine = 0
-    var lineCenter: Int
-    var newString: String
-    var newLine: String
+    var stringWithoutSpaces: String
     for (line in File(inputName).readLines()) {
-        newLine = line.trim()
-        if (newLine.length > maxLineLength) maxLineLength = newLine.length
+        stringWithoutSpaces = line.trim()
+        if (stringWithoutSpaces.length > maxLineLength) maxLineLength = stringWithoutSpaces.length
     }
     val maxLineCenter = maxLineLength / 2
     for (line in File(inputName).readLines()) {
-        newLine = line.trim()
-        for (i in newLine.indices) {
-            if (newLine[i] != ' ' && firstIndexLine == -1) {
-                firstIndexLine = i
-            } else {
-                lastIndexLine = i
-            }
+        stringWithoutSpaces = line.trim()
+        for (i in stringWithoutSpaces.indices) {
+            if (stringWithoutSpaces[i] != ' ' && firstIndexLine == -1) firstIndexLine = i
         }
-        lineCenter = lastIndexLine - (lastIndexLine - firstIndexLine) / 2
-        newString = when {
-            lineCenter == maxLineCenter -> newLine
-            lineCenter > maxLineCenter -> newLine.drop(firstIndexLine - 1)
-            else -> newLine.padStart(newLine.length + maxLineCenter - lineCenter)
+        val lastIndexLine = stringWithoutSpaces.lastIndex
+        val lineCenter = lastIndexLine - (lastIndexLine - firstIndexLine) / 2
+        val alignedLine = when {
+            lineCenter == maxLineCenter -> stringWithoutSpaces
+            lineCenter > maxLineCenter -> stringWithoutSpaces.drop(firstIndexLine - 1)
+            else -> stringWithoutSpaces.padStart(stringWithoutSpaces.length + maxLineCenter - lineCenter)
         }
-        writer.write(newString)
+        writer.write(alignedLine)
         writer.newLine()
         firstIndexLine = -1
-        lastIndexLine = 0
     }
     writer.close()
 }
