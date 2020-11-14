@@ -163,21 +163,23 @@ fun sibilants(inputName: String, outputName: String) {
 fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var maxLineLength = 0
-    var stringWithoutSpaces: String
     for (line in File(inputName).readLines()) {
-        stringWithoutSpaces = line.trim()
-        if (stringWithoutSpaces.length > maxLineLength) maxLineLength = stringWithoutSpaces.length
+        val stringWithoutSpaces = line.trim()
+        val lineLength = stringWithoutSpaces.length
+        if (lineLength > maxLineLength) maxLineLength = lineLength
     }
-    val maxLineCenter = when {
-        maxLineLength % 2 == 0 -> (maxLineLength - 1) / 2
-        else -> maxLineLength / 2
-    }
+    val maxLineCenter = maxLineLength / 2
     for (line in File(inputName).readLines()) {
-        stringWithoutSpaces = line.trim()
-        val lineCenter = stringWithoutSpaces.length / 2
+        val stringWithoutSpaces = line.trim()
+        val lineLength = stringWithoutSpaces.length
+        val lineCenter = lineLength / 2
         val alignedLine = when {
             lineCenter >= maxLineCenter -> stringWithoutSpaces
-            else -> stringWithoutSpaces.padStart(stringWithoutSpaces.length + maxLineCenter - lineCenter)
+            else -> if (maxLineLength % 2 == 0 && lineLength % 2 != 0) {
+                stringWithoutSpaces.padStart(lineLength - 1 + maxLineCenter - lineCenter)
+            } else {
+                stringWithoutSpaces.padStart(lineLength + maxLineCenter - lineCenter)
+            }
         }
         writer.write(alignedLine)
         writer.newLine()

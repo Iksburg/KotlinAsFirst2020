@@ -120,6 +120,24 @@ Basic, Ruby, Swift.
     @Test
     @Tag("15")
     fun centerFile() {
+        centerFile("input/center_in1.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            """              Съешь же ещё этих мягких французских булок, да выпей чаю.
+Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства.
+                                        Тест
+                                          """ +  // Avoiding trailing whitespaces problem
+                    """
+                                     Hello World
+           Во входном файле с именем inputName содержится некоторый текст.
+        Вывести его в выходной файл с именем outputName, выровняв по центру."""
+        )
+        centerFile("input/center_in5.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            """ БА
+Ба -"""
+        )
         centerFile("input/center_in4.txt", "temp.txt")
         assertFileContent(
             "temp.txt",
@@ -135,18 +153,6 @@ Basic, Ruby, Swift.
         assertFileContent(
             "temp.txt",
             """аааааааба"""
-        )
-        centerFile("input/center_in1.txt", "temp.txt")
-        assertFileContent(
-            "temp.txt",
-            """              Съешь же ещё этих мягких французских булок, да выпей чаю.
-Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства.
-                                        Тест
-                                          """ +  // Avoiding trailing whitespaces problem
-                    """
-                                     Hello World
-           Во входном файле с именем inputName содержится некоторый текст.
-        Вывести его в выходной файл с именем outputName, выровняв по центру."""
         )
     }
 
