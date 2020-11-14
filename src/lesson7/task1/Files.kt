@@ -161,30 +161,33 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
     var maxLineLength = 0
+    val mapOfListAndCenters = mutableMapOf<String, Int>()
     for (line in File(inputName).readLines()) {
-        val stringWithoutSpaces = line.trim()
-        val lineLength = stringWithoutSpaces.length
+        val lineLength = line.trim().length
+        mapOfListAndCenters[line] = lineLength / 2
         if (lineLength > maxLineLength) maxLineLength = lineLength
     }
     val maxLineCenter = maxLineLength / 2
-    for (line in File(inputName).readLines()) {
-        val stringWithoutSpaces = line.trim()
-        val lineLength = stringWithoutSpaces.length
-        val lineCenter = lineLength / 2
-        val alignedLine = when {
-            lineCenter >= maxLineCenter -> stringWithoutSpaces
-            else -> if (maxLineLength % 2 == 0 && lineLength % 2 != 0) {
-                stringWithoutSpaces.padStart(lineLength - 1 + maxLineCenter - lineCenter)
-            } else {
-                stringWithoutSpaces.padStart(lineLength + maxLineCenter - lineCenter)
+    File(outputName).bufferedWriter().use {
+        for (line in mapOfListAndCenters.keys) {
+            val stringWithoutSpaces = line.trim()
+            val lineLength = stringWithoutSpaces.length
+            val lineCenter = mapOfListAndCenters[line]
+            if (lineCenter != null) {
+                val alignedLine = when {
+                    lineCenter >= maxLineCenter -> stringWithoutSpaces
+                    else -> if (maxLineLength % 2 == 0 && lineLength % 2 != 0) {
+                        stringWithoutSpaces.padStart(lineLength - 1 + maxLineCenter - lineCenter)
+                    } else {
+                        stringWithoutSpaces.padStart(lineLength + maxLineCenter - lineCenter)
+                    }
+                }
+                it.write(alignedLine)
             }
+            it.newLine()
         }
-        writer.write(alignedLine)
-        writer.newLine()
     }
-    writer.close()
 }
 
 /**
