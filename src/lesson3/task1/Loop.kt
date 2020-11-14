@@ -6,7 +6,6 @@ import lesson1.task1.sqr
 import kotlin.math.sqrt
 import kotlin.math.abs
 import kotlin.math.pow
-import kotlin.math.pow
 import kotlin.math.PI
 
 // Урок 3: циклы
