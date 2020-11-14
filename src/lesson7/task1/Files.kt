@@ -168,12 +168,13 @@ fun centerFile(inputName: String, outputName: String) {
     var lineCenter: Int
     var newString: String
     for (line in File(inputName).readLines()) {
-        if (line.length > maxLineLength) maxLineLength = line.length
+        if (line.trim().length > maxLineLength) maxLineLength = line.trim().length
     }
     val maxLineCenter = (maxLineLength - 1) / 2
     for (line in File(inputName).readLines()) {
-        for (i in line.indices) {
-            if (line[i] != ' ' && firstIndexLine == -1) {
+        val newLine = line.trim()
+        for (i in newLine.indices) {
+            if (newLine[i] != ' ' && firstIndexLine == -1) {
                 firstIndexLine = i
             } else {
                 lastIndexLine = i
@@ -181,9 +182,9 @@ fun centerFile(inputName: String, outputName: String) {
         }
         lineCenter = lastIndexLine - (lastIndexLine - firstIndexLine) / 2
         newString = when {
-            lineCenter == maxLineCenter -> line.trim()
-            lineCenter > maxLineCenter -> line.drop(firstIndexLine - 1)
-            else -> line.padStart(line.length + maxLineCenter - lineCenter)
+            lineCenter == maxLineCenter -> newLine
+            lineCenter > maxLineCenter -> newLine.drop(firstIndexLine - 1)
+            else -> newLine.padStart(newLine.length + maxLineCenter - lineCenter)
         }
         writer.write(newString)
         writer.newLine()
