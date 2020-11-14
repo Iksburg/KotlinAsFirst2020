@@ -120,6 +120,14 @@ Basic, Ruby, Swift.
     @Test
     @Tag("15")
     fun centerFile() {
+        centerFile("input/center_in6.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            """                               ПБЫА
+                               ПБЫА
+                ПБЫА, ААБ, ААБ -- пбыа / ааб  Пбыа
+ПБЫА --- ааб -- ааБ / пбыа -- пбыа ааб -- ААБ, ааБ: пбыа ААБ, Пбыа"""
+        )
         centerFile("input/center_in1.txt", "temp.txt")
         assertFileContent(
             "temp.txt",

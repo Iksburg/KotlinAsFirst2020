@@ -162,29 +162,29 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     var maxLineLength = 0
-    val mapOfListAndCenters = mutableMapOf<String, Int>()
+    val listOfLine = mutableListOf<String>()
+    val listOfCenters = mutableListOf<Int>()
     for (line in File(inputName).readLines()) {
         val lineLength = line.trim().length
-        mapOfListAndCenters[line] = lineLength / 2
+        listOfLine.add(line)
+        listOfCenters.add(lineLength / 2)
         if (lineLength > maxLineLength) maxLineLength = lineLength
     }
     val maxLineCenter = maxLineLength / 2
     File(outputName).bufferedWriter().use {
-        for (line in mapOfListAndCenters.keys) {
-            val stringWithoutSpaces = line.trim()
+        for (i in 0 until listOfLine.size) {
+            val stringWithoutSpaces = listOfLine[i].trim()
             val lineLength = stringWithoutSpaces.length
-            val lineCenter = mapOfListAndCenters[line]
-            if (lineCenter != null) {
-                val alignedLine = when {
-                    lineCenter >= maxLineCenter -> stringWithoutSpaces
-                    else -> if (maxLineLength % 2 == 0 && lineLength % 2 != 0) {
-                        stringWithoutSpaces.padStart(lineLength - 1 + maxLineCenter - lineCenter)
-                    } else {
-                        stringWithoutSpaces.padStart(lineLength + maxLineCenter - lineCenter)
-                    }
+            val lineCenter = listOfCenters[i]
+            val alignedLine = when {
+                lineCenter >= maxLineCenter -> stringWithoutSpaces
+                else -> if (maxLineLength % 2 == 0 && lineLength % 2 != 0) {
+                    stringWithoutSpaces.padStart(lineLength - 1 + maxLineCenter - lineCenter)
+                } else {
+                    stringWithoutSpaces.padStart(lineLength + maxLineCenter - lineCenter)
                 }
-                it.write(alignedLine)
             }
+            it.write(alignedLine)
             it.newLine()
         }
     }
