@@ -2,8 +2,11 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
 import kotlin.math.sqrt
 import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.pow
 import kotlin.math.PI
 
 // Урок 3: циклы
@@ -307,7 +310,45 @@ fun cos(x: Double, eps: Double): Double {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var count = 0
+    var digit = 0
+    var number: Double
+    var tenCounter = 0
+    for (i in 1..n) {
+        if (sqr(i) < 10) {
+            count++
+            digit = sqr(i)
+        } else {
+            number = sqr(i).toDouble()
+            while (number >= 1.0) {
+                tenCounter++
+                number /= 10
+            }
+            number = sqr(i).toDouble()
+            if (number % 10.0 == 0.0) {
+                while (tenCounter != 0) {
+                    count++
+                    digit = (number / 10.0.pow(tenCounter - 1)).toInt()
+                    if (count == n) break
+                    number %= 10.0.pow(tenCounter - 1)
+                    tenCounter -= 1
+                }
+            } else {
+                while (number >= 1.0) {
+                    count++
+                    digit = (number / 10.0.pow(tenCounter - 1)).toInt()
+                    if (count == n) break
+                    number %= 10.0.pow(tenCounter - 1)
+                    tenCounter -= 1
+                }
+            }
+        }
+        if (count == n) break
+        tenCounter = 0
+    }
+    return digit
+}
 
 /**
  * Сложная (5 баллов)
