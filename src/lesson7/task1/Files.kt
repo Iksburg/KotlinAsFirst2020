@@ -167,12 +167,14 @@ fun centerFile(inputName: String, outputName: String) {
     var lastIndexLine = 0
     var lineCenter: Int
     var newString: String
+    var newLine: String
     for (line in File(inputName).readLines()) {
-        if (line.trim().length > maxLineLength) maxLineLength = line.trim().length
+        newLine = line.trim()
+        if (newLine.length > maxLineLength) maxLineLength = newLine.length
     }
-    val maxLineCenter = (maxLineLength - 1) / 2
+    val maxLineCenter = maxLineLength / 2
     for (line in File(inputName).readLines()) {
-        val newLine = line.trim()
+        newLine = line.trim()
         for (i in newLine.indices) {
             if (newLine[i] != ' ' && firstIndexLine == -1) {
                 firstIndexLine = i
