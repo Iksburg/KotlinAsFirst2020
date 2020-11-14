@@ -164,12 +164,11 @@ fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var maxLineLength = 0
     var stringWithoutSpaces: String
-    val maxLineCenter: Int
     for (line in File(inputName).readLines()) {
         stringWithoutSpaces = line.trim()
         if (stringWithoutSpaces.length > maxLineLength) maxLineLength = stringWithoutSpaces.length
     }
-    maxLineCenter = when {
+    val maxLineCenter = when {
         maxLineLength % 2 == 0 -> (maxLineLength - 1) / 2
         else -> maxLineLength / 2
     }
