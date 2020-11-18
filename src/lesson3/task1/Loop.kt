@@ -316,13 +316,13 @@ fun squareSequenceDigit(n: Int): Int {
     var number: Int
     for (i in 1..n) {
         number = sqr(i)
-        var tenCounter = digitNumber(number)
-        while (tenCounter != 0) {
+        var digitCounter = digitNumber(number)
+        while (digitCounter != 0) {
             count++
-            digit = (number / 10.0.pow(tenCounter - 1)).toInt()
+            digit = (number / 10.0.pow(digitCounter - 1)).toInt()
             if (count == n) break
-            number %= (10.0.pow(tenCounter - 1)).toInt()
-            tenCounter -= 1
+            number %= (10.0.pow(digitCounter - 1)).toInt()
+            digitCounter -= 1
         }
         if (count == n) break
     }
@@ -344,13 +344,13 @@ fun fibSequenceDigit(n: Int): Int {
     var number: Int
     for (i in 1..n) {
         number = fib(i)
-        var tenCounter = digitNumber(number)
-        while (tenCounter != 0) {
+        var digitCounter = digitNumber(number)
+        while (digitCounter != 0) {
             count++
-            digit = (number / 10.0.pow(tenCounter - 1)).toInt()
+            digit = (number / 10.0.pow(digitCounter - 1)).toInt()
             if (count == n) break
-            number %= (10.0.pow(tenCounter - 1)).toInt()
-            tenCounter -= 1
+            number %= (10.0.pow(digitCounter - 1)).toInt()
+            digitCounter -= 1
         }
         if (count == n) break
     }

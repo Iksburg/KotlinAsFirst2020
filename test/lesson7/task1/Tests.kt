@@ -162,6 +162,7 @@ Basic, Ruby, Swift.
             "temp.txt",
             """аааааааба"""
         )
+        File("temp.txt").delete()
     }
 
     @Test

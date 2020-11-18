@@ -113,7 +113,6 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    var wrongCharacter: Char? = null
     val mapOfCorrection = mapOf(
         'ы' to 'и',
         'Ы' to 'И',
@@ -129,11 +128,7 @@ fun sibilants(inputName: String, outputName: String) {
                 if (listOf('ж', 'ч', 'ш', 'щ').contains(line[i].toLowerCase())
                     && mapOfCorrection.contains(line[i + 1])
                 ) {
-                    wrongCharacter = mapOfCorrection[line[i + 1]]
-                }
-                if (wrongCharacter != null) {
-                    it.write(wrongCharacter.toString())
-                    wrongCharacter = null
+                    it.write(mapOfCorrection[line[i + 1]].toString())
                 } else {
                     it.write(line[i + 1].toString())
                 }
