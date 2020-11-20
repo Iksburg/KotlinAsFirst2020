@@ -2,7 +2,9 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
 import java.io.File
+import java.lang.StringBuilder
 import kotlin.text.RegexOption.IGNORE_CASE
 import kotlin.text.RegexOption.LITERAL
 
@@ -493,7 +495,39 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val line = StringBuilder()
+    val result = (lhv * rhv).toString()
+    val lengthResult = result.length
+    var numberSecond = rhv
+    var currentLength = lengthResult
+    for (i in 1..lengthResult + 1) {
+        line.append("-")
+    }
+    File(outputName).bufferedWriter().use {
+        it.write(lhv.toString().padStart(lengthResult + 1))
+        it.newLine()
+        it.write("*")
+        it.write(rhv.toString().padStart(lengthResult))
+        it.newLine()
+        it.write(line.toString())
+        it.newLine()
+        while (numberSecond != 0) {
+            val firstDigit = numberSecond % 10
+            val number = (lhv * firstDigit).toString()
+            if (currentLength == lengthResult) {
+                it.write(number.padStart(currentLength + 1))
+            } else {
+                it.write("+")
+                it.write(number.padStart(currentLength))
+            }
+            it.newLine()
+            currentLength -= 1
+            numberSecond /= 10
+        }
+        it.write(line.toString())
+        it.newLine()
+        it.write(result.padStart(lengthResult + 1))
+    }
 }
 
 
