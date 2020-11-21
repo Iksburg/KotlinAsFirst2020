@@ -506,8 +506,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write(lhv.toString().padStart(lengthResult + 1))
         it.newLine()
-        it.write("*")
-        it.write(rhv.toString().padStart(lengthResult))
+        it.write("*" + rhv.toString().padStart(lengthResult))
         it.newLine()
         it.write(line.toString())
         it.newLine()
@@ -517,8 +516,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             if (currentLength == lengthResult) {
                 it.write(number.padStart(currentLength + 1))
             } else {
-                it.write("+")
-                it.write(number.padStart(currentLength))
+                it.write("+" + number.padStart(currentLength))
             }
             it.newLine()
             currentLength -= 1
@@ -552,6 +550,76 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    var line = ""
+    val result = (lhv / rhv).toString()
+    var numberSecond = lhv.toString()
+    val length = " $lhv | ".length
+    val rhvDigitCounter = digitNumber(rhv)
+    var number: Int
+    var remainder: String
+    var numberLength: Int
+    val x = numberSecond.take(rhvDigitCounter).toInt()
+    val y = numberSecond.take(rhvDigitCounter + 1).toInt()
+    var resultDigitCounter = digitNumber(result.toInt())
+    File(outputName).bufferedWriter().use {
+        it.write(" $lhv | $rhv")
+        it.newLine()
+        if (x <= rhv) {
+            number = y - y % rhv
+            remainder = y.toString()
+        } else {
+            number = x - x % rhv
+            remainder = x.toString()
+        }
+        numberLength = number.toString().length + 1
+        while (resultDigitCounter != 0) {
+            if (remainder.toInt() >= rhv) {
+                if (numberSecond.toInt() == lhv) {
+                    it.write("-$number".padEnd(length) + result)
+                } else {
+                    it.write("-$number".padStart(numberLength))
+                }
+            } else {
+                if (numberSecond.toInt() == lhv) {
+                    it.write("-$number".padEnd(length) + result)
+                } else {
+                    it.write("-$number".padStart(numberLength - 1))
+                }
+            }
+            for (i in 0..number.toString().length) {
+                line += "-"
+            }
+            it.newLine()
+            if (remainder.toInt() >= rhv) {
+                it.write(line.padStart(numberLength))
+            } else {
+                it.write(line.padStart(numberLength - 1))
+            }
+            it.newLine()
+            line = ""
+            numberSecond = numberSecond.drop(number.toString().length)
+            val previousRemainder = remainder
+            if (numberSecond != "") {
+                remainder = (remainder.toInt() - number).toString() + numberSecond[0]
+                if (previousRemainder.toInt() >= rhv) {
+                    it.write(remainder.padStart(numberLength + 1))
+                } else {
+                    it.write(remainder.padStart(numberLength))
+                }
+                it.newLine()
+            } else {
+                remainder = (remainder.toInt() - number).toString()
+                it.write(remainder.padStart(numberLength))
+            }
+            numberLength += if (previousRemainder == number.toString()) {
+                previousRemainder.length + 1 - (previousRemainder.toInt() - number).toString().length
+            } else {
+                previousRemainder.length - (previousRemainder.toInt() - number).toString().length
+            }
+            println(previousRemainder)
+            number = remainder.toInt() - remainder.toInt() % rhv
+            resultDigitCounter -= 1
+        }
+    }
 }
 
