@@ -573,52 +573,31 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         }
         numberLength = number.toString().length + 1
         while (resultDigitCounter != 0) {
-            if (remainder.toInt() >= rhv || remainder.toInt() == number) {
-                if (numberSecond.toInt() == lhv) {
-                    it.write("-$number".padEnd(length) + result)
-                } else {
-                    it.write("-$number".padStart(numberLength))
-                }
+            if (numberSecond.toInt() == lhv) {
+                it.write("-$number".padEnd(length) + result)
             } else {
-                if (numberSecond.toInt() == lhv) {
-                    it.write("-$number".padEnd(length) + result)
-                } else {
-                    it.write("-$number".padStart(numberLength - 1))
-                }
+                it.write("-$number".padStart(numberLength))
             }
             for (i in 0..number.toString().length) {
                 line += "-"
             }
             it.newLine()
-            if (remainder.toInt() >= rhv || remainder.toInt() == number) {
-                it.write(line.padStart(numberLength))
-            } else {
-                it.write(line.padStart(numberLength - 1))
-            }
+            it.write(line.padStart(numberLength))
             it.newLine()
             line = ""
             numberSecond = numberSecond.drop(number.toString().length)
             val previousRemainder = remainder
             if (numberSecond != "") {
                 remainder = (remainder.toInt() - number).toString() + numberSecond[0]
-                if (previousRemainder.toInt() >= rhv || previousRemainder.toInt() == number) {
-                    it.write(remainder.padStart(numberLength + 1))
-                } else {
-                    it.write(remainder.padStart(numberLength))
-                }
+                it.write(remainder.padStart(numberLength + 1))
                 it.newLine()
             } else {
                 remainder = (remainder.toInt() - number).toString()
                 it.write(remainder.padStart(numberLength))
             }
-            numberLength += if (previousRemainder == number.toString()) {
-                previousRemainder.length + 1 - (previousRemainder.toInt() - number).toString().length
-            } else {
-                previousRemainder.length - (previousRemainder.toInt() - number).toString().length
-            }
+            numberLength += remainder.length - (previousRemainder.toInt() - number).toString().length
             number = remainder.toInt() - remainder.toInt() % rhv
             resultDigitCounter -= 1
         }
     }
 }
-
