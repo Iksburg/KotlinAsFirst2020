@@ -578,8 +578,14 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             } else {
                 it.write("-$number".padStart(numberLength))
             }
-            for (i in 0..number.toString().length) {
-                line += "-"
+            if (digitNumber(number) == remainder.length) {
+                for (i in 0..remainder.length) {
+                    line += "-"
+                }
+            } else {
+                for (i in 1..remainder.length) {
+                    line += "-"
+                }
             }
             it.newLine()
             it.write(line.padStart(numberLength))
