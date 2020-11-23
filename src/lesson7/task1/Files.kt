@@ -553,7 +553,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var line = ""
     val result = (lhv / rhv).toString()
     var numberSecond = lhv.toString()
-    val length = " $lhv | ".length
+    val length: Int
     val rhvDigitCounter = digitNumber(rhv)
     var number: Int
     var remainder: String
@@ -562,7 +562,13 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val y = numberSecond.take(rhvDigitCounter + 1).toInt()
     var resultDigitCounter = digitNumber(result.toInt())
     File(outputName).bufferedWriter().use {
-        it.write(" $lhv | $rhv")
+        length = if (lhv >= rhv || digitNumber(lhv) == 1) {
+            it.write(" $lhv | $rhv")
+            " $lhv | ".length
+        } else {
+            it.write("$lhv | $rhv")
+            digitNumber(lhv)
+        }
         it.newLine()
         if (x < rhv) {
             number = y - y % rhv
@@ -574,7 +580,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         numberLength = number.toString().length + 1
         while (resultDigitCounter != 0) {
             if (numberSecond != "" && numberSecond.toInt() == lhv) {
-                it.write("-$number".padEnd(length) + result)
+                if (lhv >= rhv || digitNumber(lhv) == 1) {
+                    it.write("-$number".padEnd(length) + result)
+                } else {
+                    it.write("-$number".padStart(length) + result.padStart(4))
+                }
             } else {
                 it.write("-$number".padStart(numberLength))
             }
@@ -597,7 +607,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 numberSecond.drop(1)
             }
             val previousRemainder = remainder
-            if (numberSecond != "") {
+            if (numberSecond != "" && lhv >= rhv) {
                 remainder = (remainder.toInt() - number).toString() + numberSecond[0]
                 it.write(remainder.padStart(numberLength + 1))
                 it.newLine()
