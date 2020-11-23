@@ -4,7 +4,7 @@ package lesson7.task1
 
 import lesson3.task1.digitNumber
 import java.io.File
-import java.lang.StringBuilder
+import kotlin.math.pow
 import kotlin.text.RegexOption.IGNORE_CASE
 import kotlin.text.RegexOption.LITERAL
 
@@ -495,23 +495,20 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    val line = StringBuilder()
     val result = (lhv * rhv).toString()
     val lengthResult = result.length
-    var numberSecond = rhv
+    var secondMultiplier = rhv
     var currentLength = lengthResult
-    for (i in 1..lengthResult + 1) {
-        line.append("-")
-    }
+    val line = "-".repeat(lengthResult + 1)
     File(outputName).bufferedWriter().use {
         it.write(lhv.toString().padStart(lengthResult + 1))
         it.newLine()
         it.write("*" + rhv.toString().padStart(lengthResult))
         it.newLine()
-        it.write(line.toString())
+        it.write(line)
         it.newLine()
-        while (numberSecond != 0) {
-            val firstDigit = numberSecond % 10
+        while (secondMultiplier != 0) {
+            val firstDigit = secondMultiplier % 10
             val number = (lhv * firstDigit).toString()
             if (currentLength == lengthResult) {
                 it.write(number.padStart(currentLength + 1))
@@ -520,9 +517,9 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             }
             it.newLine()
             currentLength -= 1
-            numberSecond /= 10
+            secondMultiplier /= 10
         }
-        it.write(line.toString())
+        it.write(line)
         it.newLine()
         it.write(result.padStart(lengthResult + 1))
     }
@@ -550,74 +547,77 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    var line = ""
-    val result = (lhv / rhv).toString()
-    var numberSecond = lhv.toString()
-    val length: Int
-    val rhvDigitCounter = digitNumber(rhv)
-    var number: Int
-    var remainder: String
-    var numberLength: Int
-    val x = numberSecond.take(rhvDigitCounter).toInt()
-    val y = numberSecond.take(rhvDigitCounter + 1).toInt()
-    var resultDigitCounter = digitNumber(result.toInt())
+    val result = (lhv / rhv)
+    var dividend = lhv.toString()
+    var resultDigitCounter = digitNumber(result)
     File(outputName).bufferedWriter().use {
-        length = if (lhv >= rhv || digitNumber(lhv) == 1) {
-            it.write(" $lhv | $rhv")
-            " $lhv | ".length
+        var subtrahend = (result / 10.0.pow(resultDigitCounter - 1).toInt() * rhv)
+        var subtrahendLength = digitNumber(subtrahend) + 1
+        var remainder = when {
+            lhv < rhv -> lhv.toString()
+            lhv.toString().take(digitNumber(subtrahend)).toInt() >= subtrahend -> lhv.toString().take(digitNumber(subtrahend))
+            else -> lhv.toString().take(digitNumber(subtrahend) + 1)
+        }
+        val length: Int =
+            if (remainder.length == digitNumber(subtrahend) + 1 || subtrahend == 0 && digitNumber(lhv) >= 2) {
+                it.write("$lhv | $rhv")
+                digitNumber(lhv)
+            } else {
+                it.write(" $lhv | $rhv")
+                " $lhv | ".length
+            }
+        it.newLine()
+        if (remainder.length == digitNumber(subtrahend) + 1 || subtrahend == 0 && digitNumber(lhv) >= 2) {
+            it.write("-$subtrahend".padStart(length) + result.toString().padStart(4))
         } else {
-            it.write("$lhv | $rhv")
-            digitNumber(lhv)
+            it.write("-$subtrahend".padEnd(length) + result)
         }
         it.newLine()
-        if (x < rhv) {
-            number = y - y % rhv
-            remainder = y.toString()
+        var line = if (digitNumber(subtrahend) == remainder.length) {
+            "-".repeat(remainder.length + 1)
         } else {
-            number = x - x % rhv
-            remainder = x.toString()
+            "-".repeat(remainder.length)
         }
-        numberLength = number.toString().length + 1
-        while (resultDigitCounter != 0) {
-            if (numberSecond != "" && numberSecond.toInt() == lhv) {
-                if (lhv >= rhv || digitNumber(lhv) == 1) {
-                    it.write("-$number".padEnd(length) + result)
+        it.write(line.padStart(subtrahendLength))
+        it.newLine()
+        resultDigitCounter -= 1
+        dividend = dividend.drop(digitNumber(subtrahend))
+        var previousRemainder = remainder
+        if (resultDigitCounter != 0 && lhv >= rhv) {
+            remainder = (remainder.toInt() - subtrahend).toString() + dividend[0]
+            it.write(remainder.padStart(subtrahendLength + 1))
+            it.newLine()
+        } else {
+            remainder = (remainder.toInt() - subtrahend).toString()
+            it.write(remainder.padStart(subtrahendLength))
+        }
+        subtrahendLength += remainder.length - (previousRemainder.toInt() - subtrahend).toString().length
+        subtrahend = remainder.toInt() - remainder.toInt() % rhv
+        if (resultDigitCounter != 0) {
+            while (resultDigitCounter != 0) {
+                it.write("-$subtrahend".padStart(subtrahendLength))
+                line = if (digitNumber(subtrahend) == remainder.length) {
+                    "-".repeat(remainder.length + 1)
                 } else {
-                    it.write("-$number".padStart(length) + result.padStart(4))
+                    "-".repeat(remainder.length)
                 }
-            } else {
-                it.write("-$number".padStart(numberLength))
-            }
-            if (digitNumber(number) == remainder.length) {
-                for (i in 0..remainder.length) {
-                    line += "-"
-                }
-            } else {
-                for (i in 1..remainder.length) {
-                    line += "-"
-                }
-            }
-            it.newLine()
-            it.write(line.padStart(numberLength))
-            it.newLine()
-            line = ""
-            numberSecond = if (resultDigitCounter == digitNumber(result.toInt())) {
-                numberSecond.drop(number.toString().length)
-            } else {
-                numberSecond.drop(1)
-            }
-            val previousRemainder = remainder
-            if (numberSecond != "" && lhv >= rhv) {
-                remainder = (remainder.toInt() - number).toString() + numberSecond[0]
-                it.write(remainder.padStart(numberLength + 1))
                 it.newLine()
-            } else {
-                remainder = (remainder.toInt() - number).toString()
-                it.write(remainder.padStart(numberLength))
+                it.write(line.padStart(subtrahendLength))
+                it.newLine()
+                resultDigitCounter -= 1
+                dividend = dividend.drop(1)
+                previousRemainder = remainder
+                if (resultDigitCounter != 0) {
+                    remainder = (remainder.toInt() - subtrahend).toString() + dividend[0]
+                    it.write(remainder.padStart(subtrahendLength + 1))
+                    it.newLine()
+                } else {
+                    remainder = (remainder.toInt() - subtrahend).toString()
+                    it.write(remainder.padStart(subtrahendLength))
+                }
+                subtrahendLength += remainder.length - (previousRemainder.toInt() - subtrahend).toString().length
+                subtrahend = remainder.toInt() - remainder.toInt() % rhv
             }
-            numberLength += remainder.length - (previousRemainder.toInt() - number).toString().length
-            number = remainder.toInt() - remainder.toInt() % rhv
-            resultDigitCounter -= 1
         }
     }
 }
