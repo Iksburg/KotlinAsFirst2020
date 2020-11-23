@@ -573,7 +573,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         }
         numberLength = number.toString().length + 1
         while (resultDigitCounter != 0) {
-            if (numberSecond.toInt() == lhv) {
+            if (numberSecond != "" && numberSecond.toInt() == lhv) {
                 it.write("-$number".padEnd(length) + result)
             } else {
                 it.write("-$number".padStart(numberLength))
@@ -585,7 +585,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             it.write(line.padStart(numberLength))
             it.newLine()
             line = ""
-            numberSecond = numberSecond.drop(number.toString().length)
+            numberSecond = if (resultDigitCounter == digitNumber(result.toInt())) {
+                numberSecond.drop(number.toString().length)
+            } else {
+                numberSecond.drop(1)
+            }
             val previousRemainder = remainder
             if (numberSecond != "") {
                 remainder = (remainder.toInt() - number).toString() + numberSecond[0]
