@@ -564,7 +564,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write(" $lhv | $rhv")
         it.newLine()
-        if (x <= rhv) {
+        if (x < rhv) {
             number = y - y % rhv
             remainder = y.toString()
         } else {
