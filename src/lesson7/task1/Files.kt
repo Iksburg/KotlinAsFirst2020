@@ -353,7 +353,95 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    File(outputName).bufferedWriter().use {
+        var countS = 0
+        var countB = 0
+        var countI = 0
+        it.write("<html><body><p>")
+        for (line in File(inputName).readLines()) {
+            if (line.isNotEmpty()) {
+                var text = line[0].toString() + line[1].toString()
+                var count = 0
+                var firstChar = 0
+                for (i in 0..line.length - 3) {
+                    text += line[i + 2]
+                    if (text[i + count] == '~' && text[i + 1 + count] == '~') {
+                        if (countS == 0) {
+                            text = text.replace("~~", "<s>")
+                            countS += 1
+                            count += 1
+                        } else {
+                            text = text.replace("~~", "</s>")
+                            countS -= 1
+                            count += 2
+                        }
+                    }
+                    if (text[i + count] == '*' && text[i + 1 + count] == '*' && text[i + 2 + count] == '*') {
+                        if (countB == 0 && countI == 0) {
+                            text = text.replace("***", "<b><i>")
+                            countB += 1
+                            countI += 1
+                            count += 3
+                            firstChar = 2
+                        } else if (countB == 1 && countI == 0) {
+                            text = text.replace("***", "</b><i>")
+                            countB -= 1
+                            countI += 1
+                            count += 4
+                            firstChar = 2
+                        } else if (countB == 0 && countI == 1) {
+                            text = text.replace("***", "</i><b>")
+                            countB += 1
+                            countI -= 1
+                            count += 4
+                            firstChar = 1
+                        } else if (firstChar == 1) {
+                            text = text.replace("***", "</i></b>")
+                            countB -= 1
+                            countI -= 1
+                            count += 5
+                            firstChar = 0
+                        } else if (firstChar == 2) {
+                            text = text.replace("***", "</b></i>")
+                            countB -= 1
+                            countI -= 1
+                            count += 5
+                            firstChar = 0
+                        }
+                    } else if (text[i + count] == '*' && text[i + 1 + count] == '*') {
+                        if (countB == 0) {
+                            text = text.replace("**", "<b>")
+                            countB += 1
+                            count += 1
+                            if (firstChar != 2) firstChar = 1
+                        } else {
+                            text = text.replace("**", "</b>")
+                            countB -= 1
+                            count += 2
+                            if (firstChar == 1) firstChar = 0
+                        }
+                    } else if (text[i + count] == '*') {
+                        if (countI == 0) {
+                            text = text.replace("*", "<i>")
+                            countI += 1
+                            count += 2
+                            if (firstChar != 1) firstChar = 2
+                        } else {
+                            text = text.replace("*", "</i>")
+                            countI -= 1
+                            count += 3
+                            if (firstChar == 2) firstChar = 0
+                        }
+                    }
+                }
+                it.write(text)
+            } else {
+                it.write("</p><p>")
+                continue
+            }
+        }
+        it.write("</p></body></html>")
+    }
 }
 
 /**
@@ -555,7 +643,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var subtrahendLength = digitNumber(subtrahend) + 1
         var remainder = when {
             lhv < rhv -> lhv.toString()
-            lhv.toString().take(digitNumber(subtrahend)).toInt() >= subtrahend -> lhv.toString().take(digitNumber(subtrahend))
+            lhv.toString().take(digitNumber(subtrahend)).toInt() >= subtrahend -> lhv.toString()
+                .take(digitNumber(subtrahend))
             else -> lhv.toString().take(digitNumber(subtrahend) + 1)
         }
         val length: Int =
@@ -573,7 +662,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             it.write("-$subtrahend".padEnd(length) + result)
         }
         it.newLine()
-        var line = if (digitNumber(subtrahend) == remainder.length) {
+        val line = if (digitNumber(subtrahend) == remainder.length) {
             "-".repeat(remainder.length + 1)
         } else {
             "-".repeat(remainder.length)
@@ -582,7 +671,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         it.newLine()
         resultDigitCounter -= 1
         dividend = dividend.drop(digitNumber(subtrahend))
-        var previousRemainder = remainder
+        val previousRemainder = remainder
         if (resultDigitCounter != 0 && lhv >= rhv) {
             remainder = (remainder.toInt() - subtrahend).toString() + dividend[0]
             it.write(remainder.padStart(subtrahendLength + 1))
@@ -591,12 +680,12 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             remainder = (remainder.toInt() - subtrahend).toString()
             it.write(remainder.padStart(subtrahendLength))
         }
-        subtrahendLength += remainder.length - (previousRemainder.toInt() - subtrahend).toString().length
+        subtrahendLength += remainder.length - digitNumber((previousRemainder.toInt() - subtrahend))
         subtrahend = remainder.toInt() - remainder.toInt() % rhv
         if (resultDigitCounter != 0) {
             while (resultDigitCounter != 0) {
                 it.write("-$subtrahend".padStart(subtrahendLength))
-                line = if (digitNumber(subtrahend) == remainder.length) {
+                val line = if (digitNumber(subtrahend) == remainder.length) {
                     "-".repeat(remainder.length + 1)
                 } else {
                     "-".repeat(remainder.length)
@@ -606,7 +695,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 it.newLine()
                 resultDigitCounter -= 1
                 dividend = dividend.drop(1)
-                previousRemainder = remainder
                 if (resultDigitCounter != 0) {
                     remainder = (remainder.toInt() - subtrahend).toString() + dividend[0]
                     it.write(remainder.padStart(subtrahendLength + 1))
@@ -615,7 +703,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     remainder = (remainder.toInt() - subtrahend).toString()
                     it.write(remainder.padStart(subtrahendLength))
                 }
-                subtrahendLength += remainder.length - (previousRemainder.toInt() - subtrahend).toString().length
+                subtrahendLength += 1
                 subtrahend = remainder.toInt() - remainder.toInt() % rhv
             }
         }
