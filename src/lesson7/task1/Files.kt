@@ -662,7 +662,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             it.write("-$subtrahend".padEnd(length) + result)
         }
         it.newLine()
-        val line = if (digitNumber(subtrahend) == remainder.length) {
+        var line = if (digitNumber(subtrahend) == remainder.length) {
             "-".repeat(remainder.length + 1)
         } else {
             "-".repeat(remainder.length)
@@ -685,7 +685,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         if (resultDigitCounter != 0) {
             while (resultDigitCounter != 0) {
                 it.write("-$subtrahend".padStart(subtrahendLength))
-                val line = if (digitNumber(subtrahend) == remainder.length) {
+                line = if (digitNumber(subtrahend) == remainder.length) {
                     "-".repeat(remainder.length + 1)
                 } else {
                     "-".repeat(remainder.length)
