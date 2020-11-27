@@ -67,13 +67,13 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()) {
-        if (line.firstOrNull() == '_') continue
-        writer.write(line)
-        writer.newLine()
+    File(outputName).bufferedWriter().use {
+        for (line in File(inputName).readLines()) {
+            if (line.firstOrNull() == '_') continue
+            it.write(line)
+            it.newLine()
+        }
     }
-    writer.close()
 }
 
 /**
@@ -357,15 +357,15 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var countS = 0
         var countB = 0
         var countI = 0
+        var firstChar = 0
         it.write("<html><body><p>")
         for (line in File(inputName).readLines()) {
-            if (line.isNotEmpty()) {
-                var text = line[0].toString() + line[1].toString()
-                var count = 0
-                var firstChar = 0
+            if (line.replace(Regex("\t"), "").isNotEmpty()) {
                 if (line.length < 3) {
                     it.write(line)
                 } else {
+                    var text = line[0].toString() + line[1].toString()
+                    var count = 0
                     for (i in 0..line.length - 3) {
                         text += line[i + 2]
                         if (text[i + count] == '~' && text[i + 1 + count] == '~') {
@@ -425,20 +425,50 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                             }
                         } else if (text[i + count] == '*') {
                             if (countI == 0) {
-                                text = text.replace("*", "<i>")
+                                text = text.replaceRange(i + count..i + count, "<i>")
                                 countI += 1
                                 count += 2
                                 if (firstChar != 1) firstChar = 2
                             } else {
-                                text = text.replace("*", "</i>")
+                                text = text.replaceRange(i + count..i + count, "</i>")
                                 countI -= 1
                                 count += 3
                                 if (firstChar == 2) firstChar = 0
                             }
                         }
                     }
+                    if (text[text.lastIndex] == '~' && text[text.lastIndex - 1] == '~') {
+                        if (countS == 0) {
+                            text = text.replace("~~", "<s>")
+                            countS += 1
+                        } else {
+                            text = text.replace("~~", "</s>")
+                            countS -= 1
+                        }
+                    }
+                    if (text[text.lastIndex] == '*' && text[text.lastIndex - 1] == '*') {
+                        if (countB == 0) {
+                            text = text.replace("**", "<b>")
+                            countB += 1
+                            if (firstChar != 2) firstChar = 1
+                        } else {
+                            text = text.replace("**", "</b>")
+                            countB -= 1
+                            if (firstChar == 1) firstChar = 0
+                        }
+                    } else if (text[text.lastIndex] == '*' || text[text.lastIndex - 1] == '*') {
+                        if (countI == 0) {
+                            text = text.replace("*", "<i>")
+                            countI += 1
+                            if (firstChar != 1) firstChar = 2
+                        } else {
+                            text = text.replace("*", "</i>")
+                            countI -= 1
+                            if (firstChar == 2) firstChar = 0
+                        }
+                    }
+                    it.write(text)
                 }
-                it.write(text)
             } else {
                 it.write("</p><p>")
                 continue
