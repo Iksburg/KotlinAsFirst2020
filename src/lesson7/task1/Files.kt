@@ -362,8 +362,53 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         it.write("<html><body><p>")
         for (line in File(inputName).readLines()) {
             if (line.replace(Regex("\t"), "").isNotEmpty()) {
-                if (line.length < 3) {
-                    it.write(line)
+                if (line.length == 1) {
+                    if (line[0] == '*') {
+                        if (countI == 0) {
+                            it.write("<i>")
+                            countI += 1
+                            if (firstChar != 1) firstChar = 2
+                        } else {
+                            it.write("</i>")
+                            countI -= 1
+                            if (firstChar == 2) firstChar = 0
+                        }
+                    } else {
+                        it.write(line)
+                    }
+                } else if (line.length == 2) {
+                    if (line[0] == '~' && line[1] == '~') {
+                        if (countS == 0) {
+                            it.write("<s>")
+                            countS += 1
+                        } else {
+                            it.write("</s>")
+                            countS -= 1
+                        }
+                    }
+                    if (line[0] == '*' && line[1] == '*') {
+                        if (countB == 0) {
+                            it.write("<b>")
+                            countB += 1
+                            if (firstChar != 2) firstChar = 1
+                        } else {
+                            it.write("</b>")
+                            countB -= 1
+                            if (firstChar == 1) firstChar = 0
+                        }
+                    } else if (line[0] == '*' || line[1] == '*') {
+                        if (countI == 0) {
+                            it.write(line.replace("*", "<i>"))
+                            countI += 1
+                            if (firstChar != 1) firstChar = 2
+                        } else {
+                            it.write(line.replace("*", "</i>"))
+                            countI -= 1
+                            if (firstChar == 2) firstChar = 0
+                        }
+                    } else {
+                        it.write(line)
+                    }
                 } else {
                     var text = line[0].toString() + line[1].toString()
                     var count = 0
