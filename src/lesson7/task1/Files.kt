@@ -517,7 +517,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
             } else if (previousLine.isNotEmpty()) {
                 it.write("</p><p>")
-                continue
             }
             previousLine = line
         }

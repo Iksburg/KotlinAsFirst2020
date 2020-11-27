@@ -307,9 +307,20 @@ Basic, Ruby, Swift.
         File("temp.html").delete()
     }
 
+    private fun checkHtmlSimpleExample4() {
+        val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
+        val expected =
+            """<html><body><p>v]V<s>M){</s>Zy^ng</p><p>)iGr9B}L8TL2Fh?</p></body></html>""".trimIndent().replace(Regex("[\\s\\n\\t]"), "")
+        assertEquals(expected, result)
+
+        File("temp.html").delete()
+    }
+
     @Test
     @Tag("22")
     fun markdownToHtmlSimple() {
+        markdownToHtmlSimple("input/markdown_simple4.md", "temp.html")
+        checkHtmlSimpleExample4()
         markdownToHtmlSimple("input/markdown_simple3.md", "temp.html")
         checkHtmlSimpleExample3()
         markdownToHtmlSimple("input/markdown_simple2.md", "temp.html")
