@@ -385,8 +385,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                             it.write("</s>")
                             countS -= 1
                         }
-                    }
-                    if (line[0] == '*' && line[1] == '*') {
+                    } else if (line[0] == '*' && line[1] == '*') {
                         if (countB == 0) {
                             it.write("<b>")
                             countB += 1
