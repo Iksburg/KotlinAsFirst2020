@@ -361,6 +361,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var previousLine = ""
         it.write("<html><body><p>")
         for (line in File(inputName).readLines()) {
+            if (previousLine.isNotEmpty() && line.replace(Regex("[\\s\\t]"), "").isEmpty()) {
+                it.write("</p><p>")
+            }
             if (line.replace(Regex("[\\s\\t]"), "").isNotEmpty()) {
                 if (line.length == 1) {
                     if (line[0] == '*') {
@@ -514,10 +517,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     }
                     it.write(text)
                 }
-            } else if (previousLine.isNotEmpty()) {
-                it.write("</p><p>")
             }
-            previousLine = line
+            previousLine = line.replace(Regex("[\\s\\t]"), "")
         }
         it.write("</p></body></html>")
     }
