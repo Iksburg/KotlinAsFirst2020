@@ -297,9 +297,21 @@ Basic, Ruby, Swift.
         File("temp.html").delete()
     }
 
+    private fun checkHtmlSimpleExample3() {
+        val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
+        val expected =
+            """<html><body><p>3U{xAKRdH^:;Ell<s>g2</s>c<b>:</b>2yXnULQHt<b>H`y^k<i>-A<s>dju</s>X</i>#3;pc'4/<i>Q</i>s<s>S1\"Q,M<i></i>@aX<i>.u</i>A<i>=!</i>6U[f</s>&V<i>N<s>J5</s>D</i>Ij<s>oe<i>OIn(tWW</i>]</s>_xDf<s>eh</s>Ar<s>iV;&SY</s>4<s>:<i>?'m</i>%@}</s>Zh2</b>7<b>6+</b>:SBSW%<b>J<s>\\<i>o</i>a</s>3bS<s>7jl9</s>t<i>:z.Kv6</i>A&qa3<s>|r-+kcYe9</s>==PwWYL</b><s>\\</s><s>{<i>h+7m<b>i</b>YF.O</i>?<i>M]d<b></b>QE</i>M<b>+tA,</b><b>tm,QO</b>{S2\"5sk.2<i>l</i><i>S<b>d,</b></i>Mi_</s>[.</p><p><b>5!<s>Pw'6(icmdt\".:IN<i>/3[_XmG|LX!)(</i>:xU@^G`<i>#</i>=</s>PGCD/TM&gAAP!KY<s>m_(B4</s>zL(!S.</b>dOW.hP<i>u</i>N^<i>8)R-N</i>DA<b>+p3ku</b>s]:R<s>&v<i>X</i>jKcF=NllW<i><b>{N5v|C?RKNq</b>^cT@xP6|NnQycA;sTP</i>\"i<b>)#<i>&6</i>Y</b>'B`<i>S&R{''}.,n'1t?u</i>d4<b>C?7FZ&Ww,%2@<i>W=n225</i>y?<i>6p!</i>O</b>},p</s>F<i><b>?<s>J.\\[</s>=<s></s>[<s>!.</s>8B7<s>Uk</s>o</b>8J-[hkk+!</i>z<i>|v;9<b>iyWe88-Y1uS/fu</b>|`\"[</i>xM.\"Q<s>G^n<i>H+ghr=3U'7#i<b>e</b></i>Ftzf7r<i>=</i>Fr</s>;mMF%3d/%Z<b>t(@</b>[(5HU4=(<s>s,96</s>Yza<s>{u1[J0pk3J<b>um</b><i>y</i>}D?<b>9S<i></i>J<i>E%()/</i></b></s>ap</p><p>JG'Dodu}B<i>5.-_UTc<s>N9\\4rI{lh</s>j</i>lE<s>f+I2</s>GUriVD1bs3<b>n)</b>plM8cbv1(qP|kL<s>{9(d1t<b>F1P=+r/<i>SQzD8=t</i>J9Dt&M:L0UX,f2m(9ClrRGL(84&<i>?p5V4&3x[J\\k,</i>U%/\\)/SCRyV0,;\\x</b>@0f9KJz,DlAkl\\W&1-Rz</s>Q;gAv_Toh+)JxxsT\\<s>8mSHTOLn3b)k{s[=Z_U=YyLwPvd3uz`</s>f?)1Som(QnrA<s>2Y<b>5#!</b>Uo<b>qi&'</b>0bESVy/KJ9&@i7ti{Gj</s>84v4Zbbk`q6</p></body></html>"""
+                .trimIndent().replace(Regex("[\\s\\n\\t]"), "")
+        assertEquals(expected, result)
+
+        File("temp.html").delete()
+    }
+
     @Test
     @Tag("22")
     fun markdownToHtmlSimple() {
+        markdownToHtmlSimple("input/markdown_simple3.md", "temp.html")
+        checkHtmlSimpleExample3()
         markdownToHtmlSimple("input/markdown_simple2.md", "temp.html")
         checkHtmlSimpleExample2()
         markdownToHtmlSimple("input/markdown_simple.md", "temp.html")

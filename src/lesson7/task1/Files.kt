@@ -358,6 +358,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var countB = 0
         var countI = 0
         var firstChar = 0
+        var previousLine = ""
         it.write("<html><body><p>")
         for (line in File(inputName).readLines()) {
             if (line.replace(Regex("\t"), "").isNotEmpty()) {
@@ -469,10 +470,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     }
                     it.write(text)
                 }
-            } else {
+            } else if (previousLine.isNotEmpty()) {
                 it.write("</p><p>")
                 continue
             }
+            previousLine = line
         }
         it.write("</p></body></html>")
     }
