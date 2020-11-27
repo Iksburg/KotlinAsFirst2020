@@ -363,74 +363,78 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 var text = line[0].toString() + line[1].toString()
                 var count = 0
                 var firstChar = 0
-                for (i in 0..line.length - 3) {
-                    text += line[i + 2]
-                    if (text[i + count] == '~' && text[i + 1 + count] == '~') {
-                        if (countS == 0) {
-                            text = text.replace("~~", "<s>")
-                            countS += 1
-                            count += 1
-                        } else {
-                            text = text.replace("~~", "</s>")
-                            countS -= 1
-                            count += 2
+                if (line.length < 3) {
+                    it.write(line)
+                } else {
+                    for (i in 0..line.length - 3) {
+                        text += line[i + 2]
+                        if (text[i + count] == '~' && text[i + 1 + count] == '~') {
+                            if (countS == 0) {
+                                text = text.replace("~~", "<s>")
+                                countS += 1
+                                count += 1
+                            } else {
+                                text = text.replace("~~", "</s>")
+                                countS -= 1
+                                count += 2
+                            }
                         }
-                    }
-                    if (text[i + count] == '*' && text[i + 1 + count] == '*' && text[i + 2 + count] == '*') {
-                        if (countB == 0 && countI == 0) {
-                            text = text.replace("***", "<b><i>")
-                            countB += 1
-                            countI += 1
-                            count += 3
-                            firstChar = 2
-                        } else if (countB == 1 && countI == 0) {
-                            text = text.replace("***", "</b><i>")
-                            countB -= 1
-                            countI += 1
-                            count += 4
-                            firstChar = 2
-                        } else if (countB == 0 && countI == 1) {
-                            text = text.replace("***", "</i><b>")
-                            countB += 1
-                            countI -= 1
-                            count += 4
-                            firstChar = 1
-                        } else if (firstChar == 1) {
-                            text = text.replace("***", "</i></b>")
-                            countB -= 1
-                            countI -= 1
-                            count += 5
-                            firstChar = 0
-                        } else if (firstChar == 2) {
-                            text = text.replace("***", "</b></i>")
-                            countB -= 1
-                            countI -= 1
-                            count += 5
-                            firstChar = 0
-                        }
-                    } else if (text[i + count] == '*' && text[i + 1 + count] == '*') {
-                        if (countB == 0) {
-                            text = text.replace("**", "<b>")
-                            countB += 1
-                            count += 1
-                            if (firstChar != 2) firstChar = 1
-                        } else {
-                            text = text.replace("**", "</b>")
-                            countB -= 1
-                            count += 2
-                            if (firstChar == 1) firstChar = 0
-                        }
-                    } else if (text[i + count] == '*') {
-                        if (countI == 0) {
-                            text = text.replace("*", "<i>")
-                            countI += 1
-                            count += 2
-                            if (firstChar != 1) firstChar = 2
-                        } else {
-                            text = text.replace("*", "</i>")
-                            countI -= 1
-                            count += 3
-                            if (firstChar == 2) firstChar = 0
+                        if (text[i + count] == '*' && text[i + 1 + count] == '*' && text[i + 2 + count] == '*') {
+                            if (countB == 0 && countI == 0) {
+                                text = text.replace("***", "<b><i>")
+                                countB += 1
+                                countI += 1
+                                count += 3
+                                firstChar = 2
+                            } else if (countB == 1 && countI == 0) {
+                                text = text.replace("***", "</b><i>")
+                                countB -= 1
+                                countI += 1
+                                count += 4
+                                firstChar = 2
+                            } else if (countB == 0 && countI == 1) {
+                                text = text.replace("***", "</i><b>")
+                                countB += 1
+                                countI -= 1
+                                count += 4
+                                firstChar = 1
+                            } else if (firstChar == 1) {
+                                text = text.replace("***", "</i></b>")
+                                countB -= 1
+                                countI -= 1
+                                count += 5
+                                firstChar = 0
+                            } else if (firstChar == 2) {
+                                text = text.replace("***", "</b></i>")
+                                countB -= 1
+                                countI -= 1
+                                count += 5
+                                firstChar = 0
+                            }
+                        } else if (text[i + count] == '*' && text[i + 1 + count] == '*') {
+                            if (countB == 0) {
+                                text = text.replace("**", "<b>")
+                                countB += 1
+                                count += 1
+                                if (firstChar != 2) firstChar = 1
+                            } else {
+                                text = text.replace("**", "</b>")
+                                countB -= 1
+                                count += 2
+                                if (firstChar == 1) firstChar = 0
+                            }
+                        } else if (text[i + count] == '*') {
+                            if (countI == 0) {
+                                text = text.replace("*", "<i>")
+                                countI += 1
+                                count += 2
+                                if (firstChar != 1) firstChar = 2
+                            } else {
+                                text = text.replace("*", "</i>")
+                                countI -= 1
+                                count += 3
+                                if (firstChar == 2) firstChar = 0
+                            }
                         }
                     }
                 }
