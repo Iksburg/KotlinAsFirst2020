@@ -4,7 +4,6 @@ package lesson7.task1
 
 import lesson3.task1.digitNumber
 import java.io.File
-import kotlin.concurrent.fixedRateTimer
 import kotlin.math.pow
 import kotlin.text.RegexOption.IGNORE_CASE
 import kotlin.text.RegexOption.LITERAL
@@ -359,10 +358,15 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var countB = 0
         var countI = 0
         var firstChar = 0
-        var firstLine = File(inputName).readLines()[0].replace(Regex("[\\s\\t]"), "")
+        val text = File(inputName).readLines()
+        var firstLine = if (text.isNotEmpty()) {
+            text[0].replace(Regex("[\\s\\t]"), "")
+        } else {
+            ""
+        }
         var previousLine = firstLine
         it.write("<html><body><p>")
-        for (line in File(inputName).readLines()) {
+        for (line in text) {
             val processedLine = line.replace(Regex("[\\s\\t]"), "")
             if (firstLine.isEmpty() && previousLine.isNotEmpty()) {
                 firstLine = previousLine
@@ -418,110 +422,110 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         it.write(line)
                     }
                 } else {
-                    var text = line[0].toString() + line[1].toString()
+                    var newLine = line[0].toString() + line[1].toString()
                     var count = 0
                     for (i in 0..line.length - 3) {
-                        text += line[i + 2]
-                        if (text[i + count] == '~' && text[i + 1 + count] == '~') {
+                        newLine += line[i + 2]
+                        if (newLine[i + count] == '~' && newLine[i + 1 + count] == '~') {
                             if (countS == 0) {
-                                text = text.replace("~~", "<s>")
+                                newLine = newLine.replace("~~", "<s>")
                                 countS += 1
                                 count += 1
                             } else {
-                                text = text.replace("~~", "</s>")
+                                newLine = newLine.replace("~~", "</s>")
                                 countS -= 1
                                 count += 2
                             }
                         }
-                        if (text[i + count] == '*' && text[i + 1 + count] == '*' && text[i + 2 + count] == '*') {
+                        if (newLine[i + count] == '*' && newLine[i + 1 + count] == '*' && newLine[i + 2 + count] == '*') {
                             if (countB == 0 && countI == 0) {
-                                text = text.replace("***", "<b><i>")
+                                newLine = newLine.replace("***", "<b><i>")
                                 countB += 1
                                 countI += 1
                                 count += 3
                                 firstChar = 2
                             } else if (countB == 1 && countI == 0) {
-                                text = text.replace("***", "</b><i>")
+                                newLine = newLine.replace("***", "</b><i>")
                                 countB -= 1
                                 countI += 1
                                 count += 4
                                 firstChar = 2
                             } else if (countB == 0 && countI == 1) {
-                                text = text.replace("***", "</i><b>")
+                                newLine = newLine.replace("***", "</i><b>")
                                 countB += 1
                                 countI -= 1
                                 count += 4
                                 firstChar = 1
                             } else if (firstChar == 1) {
-                                text = text.replace("***", "</i></b>")
+                                newLine = newLine.replace("***", "</i></b>")
                                 countB -= 1
                                 countI -= 1
                                 count += 5
                                 firstChar = 0
                             } else if (firstChar == 2) {
-                                text = text.replace("***", "</b></i>")
+                                newLine = newLine.replace("***", "</b></i>")
                                 countB -= 1
                                 countI -= 1
                                 count += 5
                                 firstChar = 0
                             }
-                        } else if (text[i + count] == '*' && text[i + 1 + count] == '*') {
+                        } else if (newLine[i + count] == '*' && newLine[i + 1 + count] == '*') {
                             if (countB == 0) {
-                                text = text.replace("**", "<b>")
+                                newLine = newLine.replace("**", "<b>")
                                 countB += 1
                                 count += 1
                                 if (firstChar != 2) firstChar = 1
                             } else {
-                                text = text.replace("**", "</b>")
+                                newLine = newLine.replace("**", "</b>")
                                 countB -= 1
                                 count += 2
                                 if (firstChar == 1) firstChar = 0
                             }
-                        } else if (text[i + count] == '*') {
+                        } else if (newLine[i + count] == '*') {
                             if (countI == 0) {
-                                text = text.replaceRange(i + count..i + count, "<i>")
+                                newLine = newLine.replaceRange(i + count..i + count, "<i>")
                                 countI += 1
                                 count += 2
                                 if (firstChar != 1) firstChar = 2
                             } else {
-                                text = text.replaceRange(i + count..i + count, "</i>")
+                                newLine = newLine.replaceRange(i + count..i + count, "</i>")
                                 countI -= 1
                                 count += 3
                                 if (firstChar == 2) firstChar = 0
                             }
                         }
                     }
-                    if (text[text.lastIndex] == '~' && text[text.lastIndex - 1] == '~') {
+                    if (newLine[newLine.lastIndex] == '~' && newLine[newLine.lastIndex - 1] == '~') {
                         if (countS == 0) {
-                            text = text.replace("~~", "<s>")
+                            newLine = newLine.replace("~~", "<s>")
                             countS += 1
                         } else {
-                            text = text.replace("~~", "</s>")
+                            newLine = newLine.replace("~~", "</s>")
                             countS -= 1
                         }
                     }
-                    if (text[text.lastIndex] == '*' && text[text.lastIndex - 1] == '*') {
+                    if (newLine[newLine.lastIndex] == '*' && newLine[newLine.lastIndex - 1] == '*') {
                         if (countB == 0) {
-                            text = text.replace("**", "<b>")
+                            newLine = newLine.replace("**", "<b>")
                             countB += 1
                             if (firstChar != 2) firstChar = 1
                         } else {
-                            text = text.replace("**", "</b>")
+                            newLine = newLine.replace("**", "</b>")
                             countB -= 1
                             if (firstChar == 1) firstChar = 0
                         }
-                    } else if (text[text.lastIndex] == '*' || text[text.lastIndex - 1] == '*') {
+                    } else if (newLine[newLine.lastIndex] == '*' || newLine[newLine.lastIndex - 1] == '*') {
                         if (countI == 0) {
-                            text = text.replace("*", "<i>")
+                            newLine = newLine.replace("*", "<i>")
                             countI += 1
                             if (firstChar != 1) firstChar = 2
                         } else {
-                            text = text.replace("*", "</i>")
+                            newLine = newLine.replace("*", "</i>")
                             countI -= 1
                             if (firstChar == 2) firstChar = 0
                         }
                     }
-                    it.write(text)
+                    it.write(newLine)
                 }
             }
             previousLine = processedLine
