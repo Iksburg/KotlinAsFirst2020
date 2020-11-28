@@ -4,6 +4,7 @@ package lesson7.task1
 
 import lesson3.task1.digitNumber
 import java.io.File
+import kotlin.concurrent.fixedRateTimer
 import kotlin.math.pow
 import kotlin.text.RegexOption.IGNORE_CASE
 import kotlin.text.RegexOption.LITERAL
@@ -358,13 +359,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var countB = 0
         var countI = 0
         var firstChar = 0
-        var previousLine = ""
+        var firstLine = File(inputName).readLines()[0].replace(Regex("[\\s\\t]"), "")
+        var previousLine = firstLine
         it.write("<html><body><p>")
         for (line in File(inputName).readLines()) {
-            if (previousLine.isNotEmpty() && line.replace(Regex("[\\s\\t]"), "").isEmpty()) {
+            val processedLine = line.replace(Regex("[\\s\\t]"), "")
+            if (firstLine.isEmpty() && previousLine.isNotEmpty()) {
+                firstLine = line
+            }
+            if (firstLine.isNotEmpty() && previousLine.isEmpty() && processedLine.isNotEmpty()) {
                 it.write("</p><p>")
             }
-            if (line.replace(Regex("[\\s\\t]"), "").isNotEmpty()) {
+            if (processedLine.isNotEmpty()) {
                 if (line.length == 1) {
                     if (line[0] == '*') {
                         if (countI == 0) {
@@ -518,7 +524,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     it.write(text)
                 }
             }
-            previousLine = line.replace(Regex("[\\s\\t]"), "")
+            previousLine = processedLine
         }
         it.write("</p></body></html>")
     }
