@@ -42,7 +42,7 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
         currentLineLength += word.length
     }
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty()) {
+        if (line.isEmpty) {
             writer.newLine()
             if (currentLineLength > 0) {
                 writer.newLine()
@@ -123,13 +123,12 @@ fun sibilants(inputName: String, outputName: String) {
         'ю' to 'у',
         'Ю' to 'У',
     )
+    val setOfLetters = setOf('ж', 'ч', 'ш', 'щ')
     File(outputName).bufferedWriter().use {
         for (line in File(inputName).readLines()) {
             if (line.isNotEmpty()) it.write(line[0].toString())
             for (i in 0..line.length - 2) {
-                if (listOf('ж', 'ч', 'ш', 'щ').contains(line[i].toLowerCase())
-                    && mapOfCorrection.contains(line[i + 1])
-                ) {
+                if (line[i].toLowerCase() in setOfLetters && line[i + 1] in mapOfCorrection) {
                     it.write(mapOfCorrection[line[i + 1]].toString())
                 } else {
                     it.write(line[i + 1].toString())
@@ -360,14 +359,14 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var firstChar = 0
         val text = File(inputName).readLines()
         var firstLine = if (text.isNotEmpty()) {
-            text[0].replace(Regex("[\\s\\t]"), "")
+            text[0].replace(Regex("\\s"), "")
         } else {
             ""
         }
         var previousLine = firstLine
         it.write("<html><body><p>")
         for (line in text) {
-            val processedLine = line.replace(Regex("[\\s\\t]"), "")
+            val processedLine = line.replace(Regex("\\s"), "")
             if (firstLine.isEmpty() && previousLine.isNotEmpty()) {
                 firstLine = previousLine
             }

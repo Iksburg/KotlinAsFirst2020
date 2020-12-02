@@ -310,3 +310,35 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
+val number = mapOf(
+    "ноль" to 0,
+    "один" to 1,
+    "два" to 2,
+    "три" to 3,
+    "четыре" to 4,
+    "пять" to 5,
+    "шесть" to 6,
+    "семь" to 7,
+    "восемь" to 8,
+    "девять" to 9,
+    "десять" to 10,
+)
+
+fun wedding(marks: List<String>, cost: Int): Int {
+    var result = 0
+    for (element in marks) {
+        val parts = element.split("+")
+        if (parts.size == 2) {
+            val numberOfGuests = number[parts[1]]
+            if (numberOfGuests != null) {
+                result += (1 + numberOfGuests) * cost
+            } else {
+                throw IllegalArgumentException()
+            }
+        } else {
+            throw IllegalArgumentException()
+        }
+    }
+    return result
+}

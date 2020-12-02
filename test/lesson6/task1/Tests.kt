@@ -161,4 +161,20 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
     }
+
+    @Test
+    fun wedding() {
+        assertEquals(14, wedding(listOf("Даниил+два", "Катя+десять"), 1))
+        assertEquals(28, wedding(listOf("Даниил+два", "Катя+десять"), 2))
+        assertEquals(7000, wedding(listOf("Катя+десять", "Сергей+пять", "Анатолий+девять", "Елизавета+ноль"), 250))
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf("Даниил+одиннадцать"), 2) }
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf("Даниил"), 3) }
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf("Даниил+пять+Катя"), 24) }
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf(""), 24) }
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf("девять+2"), 1) }
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf("девять+23"), 4) }
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf("девять+III"), 4) }
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf("Даниил+девять", "Настя+одиннадцать"), 2) }
+        assertThrows(IllegalArgumentException::class.java) { wedding(listOf("++Катя"), 24) }
+    }
 }
