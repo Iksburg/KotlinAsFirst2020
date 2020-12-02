@@ -42,7 +42,7 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
         currentLineLength += word.length
     }
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty) {
+        if (line.isEmpty()) {
             writer.newLine()
             if (currentLineLength > 0) {
                 writer.newLine()
