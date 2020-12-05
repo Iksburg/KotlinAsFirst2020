@@ -459,7 +459,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                             newLine += stackS.pop()
                         }
                     } else if ('~' == line[line.lastIndex - 1]) {
-                        newLine += line[line.lastIndex]
+                        if (line[line.lastIndex] == '*') {
+                            if (!stack.contains("</i>")) {
+                                newLine += "<i>"
+                                stack.add("</i>")
+                            } else {
+                                newLine += stack.pop()
+                            }
+                        } else {
+                            newLine += line[line.lastIndex]
+                        }
                     } else if (line.substring(line.lastIndex - 1..line.lastIndex) == "**" && line[line.lastIndex - 2] != '*') {
                         if (!stack.contains("</b>")) {
                             newLine += "<b>"
