@@ -4,6 +4,7 @@ package lesson7.task1
 
 import lesson3.task1.digitNumber
 import java.io.File
+import java.util.*
 import kotlin.math.pow
 import kotlin.text.RegexOption.IGNORE_CASE
 import kotlin.text.RegexOption.LITERAL
@@ -353,10 +354,8 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
-        var countS = 0
-        var countB = 0
-        var countI = 0
-        var firstChar = 0
+        val stackS = Stack<String>()
+        val stack = Stack<String>()
         val text = File(inputName).readLines()
         var firstLine = if (text.isNotEmpty()) {
             text[0].replace(Regex("\\s"), "")
@@ -376,153 +375,116 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             if (processedLine.isNotEmpty()) {
                 if (line.length == 1) {
                     if (line[0] == '*') {
-                        if (countI == 0) {
+                        if (!stack.contains("</i>")) {
                             it.write("<i>")
-                            countI += 1
-                            if (firstChar != 1) firstChar = 2
+                            stack.add("</i>")
                         } else {
-                            it.write("</i>")
-                            countI -= 1
-                            if (firstChar == 2) firstChar = 0
+                            it.write(stack.pop())
                         }
                     } else {
                         it.write(line)
                     }
                 } else if (line.length == 2) {
-                    if (line[0] == '~' && line[1] == '~') {
-                        if (countS == 0) {
+                    if (line.substring(0..1) == "~~") {
+                        if (!stackS.contains("</s>")) {
                             it.write("<s>")
-                            countS += 1
+                            stackS.add("</s>")
                         } else {
-                            it.write("</s>")
-                            countS -= 1
+                            it.write(stackS.pop())
                         }
-                    } else if (line[0] == '*' && line[1] == '*') {
-                        if (countB == 0) {
+                    } else if (line.substring(0..1) == "**") {
+                        if (!stack.contains("</b>")) {
                             it.write("<b>")
-                            countB += 1
-                            if (firstChar != 2) firstChar = 1
+                            stack.add("</b>")
                         } else {
-                            it.write("</b>")
-                            countB -= 1
-                            if (firstChar == 1) firstChar = 0
+                            it.write(stack.pop())
                         }
-                    } else if (line[0] == '*' || line[1] == '*') {
-                        if (countI == 0) {
+                    } else if ('*' in line.substring(0..1)) {
+                        if (!stack.contains("</i>")) {
                             it.write(line.replace("*", "<i>"))
-                            countI += 1
-                            if (firstChar != 1) firstChar = 2
+                            stack.add("<i>")
                         } else {
-                            it.write(line.replace("*", "</i>"))
-                            countI -= 1
-                            if (firstChar == 2) firstChar = 0
+                            it.write(line.replace("*", stack.pop()))
                         }
                     } else {
                         it.write(line)
                     }
                 } else {
-                    var newLine = line[0].toString() + line[1].toString()
-                    var count = 0
-                    for (i in 0..line.length - 3) {
-                        newLine += line[i + 2]
-                        if (newLine[i + count] == '~' && newLine[i + 1 + count] == '~') {
-                            if (countS == 0) {
-                                newLine = newLine.replace("~~", "<s>")
-                                countS += 1
-                                count += 1
+                    var newLine = ""
+                    var i = 0
+                    while (i <= line.length - 3) {
+                        if (line.substring(i..i + 1) == "~~") {
+                            if (!stackS.contains("</s>")) {
+                                newLine += "<s>"
+                                stackS.add("</s>")
                             } else {
-                                newLine = newLine.replace("~~", "</s>")
-                                countS -= 1
-                                count += 2
+                                newLine += stackS.pop()
                             }
-                        }
-                        if (newLine[i + count] == '*' && newLine[i + 1 + count] == '*' && newLine[i + 2 + count] == '*') {
-                            if (countB == 0 && countI == 0) {
-                                newLine = newLine.replace("***", "<b><i>")
-                                countB += 1
-                                countI += 1
-                                count += 3
-                                firstChar = 2
-                            } else if (countB == 1 && countI == 0) {
-                                newLine = newLine.replace("***", "</b><i>")
-                                countB -= 1
-                                countI += 1
-                                count += 4
-                                firstChar = 2
-                            } else if (countB == 0 && countI == 1) {
-                                newLine = newLine.replace("***", "</i><b>")
-                                countB += 1
-                                countI -= 1
-                                count += 4
-                                firstChar = 1
-                            } else if (firstChar == 1) {
-                                newLine = newLine.replace("***", "</i></b>")
-                                countB -= 1
-                                countI -= 1
-                                count += 5
-                                firstChar = 0
-                            } else if (firstChar == 2) {
-                                newLine = newLine.replace("***", "</b></i>")
-                                countB -= 1
-                                countI -= 1
-                                count += 5
-                                firstChar = 0
-                            }
-                        } else if (newLine[i + count] == '*' && newLine[i + 1 + count] == '*') {
-                            if (countB == 0) {
-                                newLine = newLine.replace("**", "<b>")
-                                countB += 1
-                                count += 1
-                                if (firstChar != 2) firstChar = 1
+                            i += 2
+                        } else if (line.substring(i..i + 2) == "***") {
+                            if (!stack.contains("</i>") && !stack.contains("</b>")) {
+                                newLine += "<b><i>"
+                                stack.add("</b>")
+                                stack.add("</i>")
                             } else {
-                                newLine = newLine.replace("**", "</b>")
-                                countB -= 1
-                                count += 2
-                                if (firstChar == 1) firstChar = 0
+                                newLine += stack.pop() + stack.pop()
                             }
-                        } else if (newLine[i + count] == '*') {
-                            if (countI == 0) {
-                                newLine = newLine.replaceRange(i + count..i + count, "<i>")
-                                countI += 1
-                                count += 2
-                                if (firstChar != 1) firstChar = 2
+                            i += 3
+                        } else if (line.substring(i..i + 1) == "**") {
+                            if (!stack.contains("</b>")) {
+                                newLine += "<b>"
+                                stack.add("</b>")
                             } else {
-                                newLine = newLine.replaceRange(i + count..i + count, "</i>")
-                                countI -= 1
-                                count += 3
-                                if (firstChar == 2) firstChar = 0
+                                newLine += stack.pop()
                             }
+                            i += 2
+                        } else if (line[i] == '*') {
+                            if (!stack.contains("</i>")) {
+                                newLine += "<i>"
+                                stack.add("</i>")
+                            } else {
+                                newLine += stack.pop()
+                            }
+                            i++
+                        } else if (line[i] != '*' && line[i] != '~') {
+                            newLine += line[i]
+                            i++
                         }
                     }
-                    if (newLine[newLine.lastIndex] == '~' && newLine[newLine.lastIndex - 1] == '~') {
-                        if (countS == 0) {
-                            newLine = newLine.replace("~~", "<s>")
-                            countS += 1
+                    if (line.substring(line.lastIndex - 1..line.lastIndex) == "~~") {
+                        if (!stackS.contains("</s>")) {
+                            newLine += "<s>"
+                            stackS.add("</s>")
                         } else {
-                            newLine = newLine.replace("~~", "</s>")
-                            countS -= 1
+                            newLine += stackS.pop()
                         }
-                    }
-                    if (newLine[newLine.lastIndex] == '*' && newLine[newLine.lastIndex - 1] == '*') {
-                        if (countB == 0) {
-                            newLine = newLine.replace("**", "<b>")
-                            countB += 1
-                            if (firstChar != 2) firstChar = 1
+                    } else if ('~' == line[line.lastIndex - 1]) {
+                        newLine += line[line.lastIndex]
+                    } else if (line.substring(line.lastIndex - 1..line.lastIndex) == "**" && line[line.lastIndex - 2] != '*') {
+                        if (!stack.contains("</b>")) {
+                            newLine += "<b>"
+                            stack.add("</b>")
                         } else {
-                            newLine = newLine.replace("**", "</b>")
-                            countB -= 1
-                            if (firstChar == 1) firstChar = 0
+                            newLine += stack.pop()
                         }
-                    } else if (newLine[newLine.lastIndex] == '*' || newLine[newLine.lastIndex - 1] == '*') {
-                        if (countI == 0) {
-                            newLine = newLine.replace("*", "<i>")
-                            countI += 1
-                            if (firstChar != 1) firstChar = 2
+                    } else if ('*' == line[line.lastIndex - 1] && line[line.lastIndex - 2] != '*') {
+                        if (!stack.contains("</i>")) {
+                            newLine += "<i>" + line[line.lastIndex]
+                            stack.add("</i>")
                         } else {
-                            newLine = newLine.replace("*", "</i>")
-                            countI -= 1
-                            if (firstChar == 2) firstChar = 0
+                            newLine += stack.pop() + line[line.lastIndex]
                         }
+                    } else if ('*' == line[line.lastIndex - 1]) {
+                        newLine += line[line.lastIndex]
+                    } else if ('*' == line[line.lastIndex]) {
+                        if (!stack.contains("</i>")) {
+                            newLine += line[line.lastIndex - 1] + "<i>"
+                            stack.add("</i>")
+                        } else {
+                            newLine += line[line.lastIndex - 1] + stack.pop()
+                        }
+                    } else {
+                        newLine += line.substring(line.lastIndex - 1..line.lastIndex)
                     }
                     it.write(newLine)
                 }
