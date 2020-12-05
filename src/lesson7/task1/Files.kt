@@ -402,7 +402,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     } else if ('*' in line.substring(0..1)) {
                         if (!stack.contains("</i>")) {
                             it.write(line.replace("*", "<i>"))
-                            stack.add("<i>")
+                            stack.add("</i>")
                         } else {
                             it.write(line.replace("*", stack.pop()))
                         }
