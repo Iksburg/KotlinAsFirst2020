@@ -42,7 +42,7 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
         currentLineLength += word.length
     }
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty()) {
+        if (line.isBlank()) {
             writer.newLine()
             if (currentLineLength > 0) {
                 writer.newLine()
@@ -367,10 +367,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         it.write("<html><body><p>")
         for (line in text) {
             val processedLine = line.replace(Regex("\\s"), "")
-            if (firstLine.isEmpty() && previousLine.isNotEmpty()) {
+            if (firstLine.isBlank() && previousLine.isNotEmpty()) {
                 firstLine = previousLine
             }
-            if (firstLine.isNotEmpty() && previousLine.isEmpty() && processedLine.isNotEmpty()) {
+            if (firstLine.isNotEmpty() && previousLine.isBlank() && processedLine.isNotEmpty()) {
                 it.write("</p><p>")
             }
             if (processedLine.isNotEmpty()) {
@@ -728,73 +728,89 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var dividend = lhv.toString()
     var resultDigitCounter = digitNumber(result)
     File(outputName).bufferedWriter().use {
-        var subtrahend = (result / 10.0.pow(resultDigitCounter - 1).toInt() * rhv)
-        var subtrahendLength = digitNumber(subtrahend) + 1
+        var subtractor = (result / 10.0.pow(resultDigitCounter - 1).toInt() * rhv)
+        val subtractorLength = digitNumber(subtractor)
+        var subtractorLengthWithMinus = subtractorLength + 1
+        val partOfSubtrahend = lhv.toString().take(subtractorLength)
         var remainder = when {
             lhv < rhv -> lhv.toString()
-            lhv.toString().take(digitNumber(subtrahend)).toInt() >= subtrahend -> lhv.toString()
-                .take(digitNumber(subtrahend))
-            else -> lhv.toString().take(digitNumber(subtrahend) + 1)
+            partOfSubtrahend.toInt() >= subtractor -> partOfSubtrahend
+            else -> lhv.toString().take(subtractorLengthWithMinus)
         }
-        val length: Int =
-            if (remainder.length == digitNumber(subtrahend) + 1 || subtrahend == 0 && digitNumber(lhv) >= 2) {
+        val previousRemainder = remainder
+        val length: Int
+        var line: String
+        if (lhv >= rhv) {
+            if (remainder.length == subtractorLength + 1) {
                 it.write("$lhv | $rhv")
-                digitNumber(lhv)
+                it.newLine()
+                length = "$lhv | ".length
+                it.write("-$subtractor".padEnd(length) + result)
+                dividend = dividend.drop(subtractorLengthWithMinus)
+                line = "-".repeat(remainder.length)
             } else {
                 it.write(" $lhv | $rhv")
-                " $lhv | ".length
+                it.newLine()
+                length = " $lhv | ".length
+                it.write("-$subtractor".padEnd(length) + result)
+                line = "-".repeat(remainder.length + 1)
+                dividend = dividend.drop(subtractorLength)
             }
-        it.newLine()
-        if (remainder.length == digitNumber(subtrahend) + 1 || subtrahend == 0 && digitNumber(lhv) >= 2) {
-            it.write("-$subtrahend".padStart(length) + result.toString().padStart(4))
-        } else {
-            it.write("-$subtrahend".padEnd(length) + result)
-        }
-        it.newLine()
-        var line = if (digitNumber(subtrahend) == remainder.length) {
-            "-".repeat(remainder.length + 1)
-        } else {
-            "-".repeat(remainder.length)
-        }
-        it.write(line.padStart(subtrahendLength))
-        it.newLine()
-        resultDigitCounter -= 1
-        dividend = dividend.drop(digitNumber(subtrahend))
-        val previousRemainder = remainder
-        if (resultDigitCounter != 0 && lhv >= rhv) {
-            remainder = (remainder.toInt() - subtrahend).toString() + dividend[0]
-            it.write(remainder.padStart(subtrahendLength + 1))
             it.newLine()
-        } else {
-            remainder = (remainder.toInt() - subtrahend).toString()
-            it.write(remainder.padStart(subtrahendLength))
-        }
-        subtrahendLength += remainder.length - digitNumber((previousRemainder.toInt() - subtrahend))
-        subtrahend = remainder.toInt() - remainder.toInt() % rhv
-        if (resultDigitCounter != 0) {
-            while (resultDigitCounter != 0) {
-                it.write("-$subtrahend".padStart(subtrahendLength))
-                line = if (digitNumber(subtrahend) == remainder.length) {
-                    "-".repeat(remainder.length + 1)
-                } else {
-                    "-".repeat(remainder.length)
-                }
+            it.write(line.padStart(subtractorLengthWithMinus))
+            it.newLine()
+            resultDigitCounter -= 1
+            if (resultDigitCounter != 0) {
+                remainder = (remainder.toInt() - subtractor).toString() + dividend[0]
+                it.write(remainder.padStart(subtractorLengthWithMinus + 1))
                 it.newLine()
-                it.write(line.padStart(subtrahendLength))
-                it.newLine()
-                resultDigitCounter -= 1
-                dividend = dividend.drop(1)
-                if (resultDigitCounter != 0) {
-                    remainder = (remainder.toInt() - subtrahend).toString() + dividend[0]
-                    it.write(remainder.padStart(subtrahendLength + 1))
-                    it.newLine()
-                } else {
-                    remainder = (remainder.toInt() - subtrahend).toString()
-                    it.write(remainder.padStart(subtrahendLength))
-                }
-                subtrahendLength += 1
-                subtrahend = remainder.toInt() - remainder.toInt() % rhv
+            } else {
+                remainder = (remainder.toInt() - subtractor).toString()
+                it.write(remainder.padStart(subtractorLengthWithMinus))
+                return
             }
+        } else {
+            line = if (digitNumber(lhv) >= 2) {
+                it.write("$lhv | $rhv")
+                "-".repeat(remainder.length)
+            } else {
+                it.write(" $lhv | $rhv")
+                "-".repeat(remainder.length + 1)
+            }
+            it.newLine()
+            length = digitNumber(lhv)
+            it.write("-$subtractor".padStart(length) + result.toString().padStart(4))
+            it.newLine()
+            it.write(line.padStart(subtractorLengthWithMinus))
+            it.newLine()
+            remainder = (remainder.toInt() - subtractor).toString()
+            it.write(remainder.padStart(subtractorLengthWithMinus))
+            return
+        }
+        subtractorLengthWithMinus += remainder.length - digitNumber((previousRemainder.toInt() - subtractor))
+        subtractor = remainder.toInt() - remainder.toInt() % rhv
+        while (resultDigitCounter != 0) {
+            it.write("-$subtractor".padStart(subtractorLengthWithMinus))
+            line = if (digitNumber(subtractor) == remainder.length) {
+                "-".repeat(remainder.length + 1)
+            } else {
+                "-".repeat(remainder.length)
+            }
+            it.newLine()
+            it.write(line.padStart(subtractorLengthWithMinus))
+            it.newLine()
+            resultDigitCounter -= 1
+            dividend = dividend.drop(1)
+            if (resultDigitCounter != 0) {
+                remainder = (remainder.toInt() - subtractor).toString() + dividend[0]
+                it.write(remainder.padStart(subtractorLengthWithMinus + 1))
+                it.newLine()
+            } else {
+                remainder = (remainder.toInt() - subtractor).toString()
+                it.write(remainder.padStart(subtractorLengthWithMinus))
+            }
+            subtractorLengthWithMinus += 1
+            subtractor = remainder.toInt() - remainder.toInt() % rhv
         }
     }
 }
