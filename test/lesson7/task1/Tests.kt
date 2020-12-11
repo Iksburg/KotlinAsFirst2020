@@ -346,9 +346,21 @@ Basic, Ruby, Swift.
         File("temp.html").delete()
     }
 
+    private fun checkHtmlSimpleExample8() {
+        val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
+        val expected =
+            """<html><body><p>\"(Xvcd6t,itG?CG<s>DpvJ893.UhyI[`ZxBo</s>`/Bw#rx8+9<i>WmQe.Ir<s>,</s>#nfB+9k</i>d8A4|m</p><p>?Fh@)2lM.bho!T<b>KXkTg<s>4Lc_mad8|J<i>eP{cC:6iP8R</i>;@SiOv</s>jhQ=5<s>3l</s>&:e:kTGN47^s\\#Xk={)[5D@-VK6rZ{I</b>/A)dZs2ps{FsTn!vHJj)._b8Jwm@{63C8G8,!p|{);<i>asPx</i>q}H,ViU0bq@:`kLz]p'd#V/lu_nd`!z]be4yL)]qv2.<b>,u7</b>(7QQi\\8Zh<i>^<s>Jf8<b>H9F'98%9Nf</b>Xw-</s>t1<b>^1AP|q-Wi</b><b>+kt</b>y}-hc</i>IF<s>grhRkQOo</s>5,7N`+Ad.NE^Zs{&t9<i>WvCK8%</i>prBi)Et<b>SLxI!:\"e3</b>V<i>;5</i>(<b>W<i><s>/</s>_}+</i>lo#9Vu<s>?ng<i>#</i>H<i></i></s>\"V2</b>)oq]<i>yQq'6O%^\\<b>eq</b>kb,<s>!MiO9</s></i>[</p><p><b>e<s>+sZ;</s>jm</b>Rb,hCplcvAY,<s>LAd:xY<b>I2q\"#c,8I<i></i>:</b>[,(=z!`/aaK}<i>&Tx4UEu!Ug?{6[</i>xP,jV-Apn</s>1rvX0:O_)L;Z&C</p><p>cO<b>]}<i></i>c|H<s>dl<i>g;6</i>GZB<i>=%u</i>L_</s></b>LS]aZ<i><s>R3y</s>1+<s>\"tb</s>[#6\"C</i>'<s></s>9c<i>\\Ym`89GY]<s>!<b>Sz</b>/</s></i>98C<b>W</b>FIKO679ey6h<i>J<s><b>viJyAHZ)</b>L85<b>j</b>h<b>r7</b>iP</s>a<b>yXCutnmYH</b>mvI</i>k+AJd&\"-<b>rC2iyuG'E;8\\<i>}ufxf@!7h7u:</i></b>tf@<i>?mM_[JIbf</i>u<b>,B<s>\\(hxRi</s>9t;</b>ZN]y|WP<i>OP+4<s>xl</s>U\\eH8U/<b>mirMw)</b><s>y/G\"C</s>A<b>\"T</b>_`</i>i</p></body></html>""".trimIndent()
+                .replace(Regex("[\\s\\n\\t]"), "")
+        assertEquals(expected, result)
+
+        File("temp.html").delete()
+    }
+
     @Test
     @Tag("22")
     fun markdownToHtmlSimple() {
+        markdownToHtmlSimple("input/markdown_simple8.md", "temp.html")
+        checkHtmlSimpleExample8()
         markdownToHtmlSimple("input/markdown_simple7.md", "temp.html")
         checkHtmlSimpleExample7()
         markdownToHtmlSimple("input/markdown_simple6.md", "temp.html")
