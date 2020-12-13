@@ -399,10 +399,10 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         for (j in 1..capacity) {
             val maxValueWithoutCurrentItem = mat[i - 1][j]
             var maxValueWithCurrentItem = 0
-            val weightOfCurr: Int = listOfWeights[i - 1]
-            if (j >= weightOfCurr) {
+            val weightOfCurrentItem = listOfWeights[i - 1]
+            if (j >= weightOfCurrentItem) {
                 maxValueWithCurrentItem = listOfPrices[i - 1]
-                val remainingCapacity = j - weightOfCurr
+                val remainingCapacity = j - weightOfCurrentItem
                 maxValueWithCurrentItem += mat[i - 1][remainingCapacity]
             }
             mat[i][j] = max(maxValueWithoutCurrentItem, maxValueWithCurrentItem)
