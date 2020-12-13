@@ -356,25 +356,23 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         val stack = Stack<String>()
         val text = File(inputName).readLines()
-        var firstLine = if (text.isNotEmpty()) {
-            text[0].replace(Regex("\\s"), "")
+        var checkingForEmptiness = false
+        var previousLine = if (text.isNotEmpty()) {
+            text[0]
         } else {
             ""
         }
-        var previousLine = firstLine
         it.write("<html><body><p>")
         for (line in text) {
-            val processedLine = line.replace(Regex("\\s"), "")
-            if (firstLine.isBlank() && previousLine.isNotBlank()) {
-                firstLine = previousLine
-            }
-            if (firstLine.isNotBlank() && previousLine.isBlank() && line.isNotBlank()) {
+            if (checkingForEmptiness && previousLine.isBlank() && line.isNotBlank()) {
                 it.write("</p><p>")
+                checkingForEmptiness = false
             }
             if (line.isNotBlank()) {
+                checkingForEmptiness = true
                 when (line.length) {
                     1 -> {
-                        if (line[0] == '*') {
+                        if (line == "*") {
                             if (!stack.contains("</i>")) {
                                 it.write("<i>")
                                 stack.add("</i>")
@@ -387,7 +385,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         }
                     }
                     2 -> {
-                        if (line.substring(0..1) == "~~") {
+                        if (line == "~~") {
                             if (!stack.contains("</s>")) {
                                 it.write("<s>")
                                 stack.add("</s>")
@@ -395,7 +393,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 it.write(stack.elementAt(stack.indexOf("</s>")))
                                 stack.remove("</s>")
                             }
-                        } else if (line.substring(0..1) == "**") {
+                        } else if (line == "**") {
                             if (!stack.contains("</b>")) {
                                 it.write("<b>")
                                 stack.add("</b>")
@@ -403,7 +401,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 it.write(stack.elementAt(stack.indexOf("</b>")))
                                 stack.remove("</b>")
                             }
-                        } else if ('*' in line.substring(0..1)) {
+                        } else if ('*' in line) {
                             if (!stack.contains("</i>")) {
                                 it.write(line.replace("*", "<i>"))
                                 stack.add("</i>")
@@ -529,7 +527,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     }
                 }
             }
-            previousLine = processedLine
+            previousLine = line
         }
         it.write("</p></body></html>")
     }

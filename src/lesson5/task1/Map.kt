@@ -3,6 +3,7 @@
 package lesson5.task1
 
 import ru.spbstu.wheels.sorted
+import kotlin.math.max
 
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
@@ -376,8 +377,8 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> { TODO()
-    /* var result: Set<String>
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val result = mutableSetOf<String>()
     val listOfNames = mutableListOf<String>()
     val listOfWeights = mutableListOf<Int>()
     val listOfPrices = mutableListOf<Int>()
@@ -386,5 +387,34 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         listOfWeights += value.first
         listOfPrices += value.second
     }
-    return result */
+    var count = listOfWeights.size
+    val mat = Array(count + 1) { IntArray(capacity + 1) }
+    for (i in 0 until capacity + 1) {
+        mat[0][i] = 0
+    }
+    for (i in 0 until count + 1) {
+        mat[i][0] = 0
+    }
+    for (i in 1..count) {
+        for (j in 1..capacity) {
+            val maxValueWithoutCurrentItem = mat[i - 1][j]
+            var maxValueWithCurrentItem = 0
+            val weightOfCurr: Int = listOfWeights[i - 1]
+            if (j >= weightOfCurr) {
+                maxValueWithCurrentItem = listOfPrices[i - 1]
+                val remainingCapacity = j - weightOfCurr
+                maxValueWithCurrentItem += mat[i - 1][remainingCapacity]
+            }
+            mat[i][j] = max(maxValueWithoutCurrentItem, maxValueWithCurrentItem)
+        }
+    }
+    var temporaryCapacity = capacity
+    while (count > 0) {
+        if (mat[count][temporaryCapacity] != mat[count - 1][temporaryCapacity]) {
+            result.add(listOfNames[count - 1])
+            temporaryCapacity -= listOfWeights[count - 1]
+        }
+        count--
+    }
+    return result
 }
