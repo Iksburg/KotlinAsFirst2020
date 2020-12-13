@@ -379,7 +379,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 it.write("<i>")
                                 stack.add("</i>")
                             } else {
-                                stack.pop()
+                                it.write(stack.elementAt(stack.indexOf("</i>")))
+                                stack.remove("</i>")
                             }
                         } else {
                             it.write(line)
@@ -391,21 +392,24 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 it.write("<s>")
                                 stack.add("</s>")
                             } else {
-                                stack.pop()
+                                it.write(stack.elementAt(stack.indexOf("</s>")))
+                                stack.remove("</s>")
                             }
                         } else if (line.substring(0..1) == "**") {
                             if (!stack.contains("</b>")) {
                                 it.write("<b>")
                                 stack.add("</b>")
                             } else {
-                                stack.pop()
+                                it.write(stack.elementAt(stack.indexOf("</b>")))
+                                stack.remove("</b>")
                             }
                         } else if ('*' in line.substring(0..1)) {
                             if (!stack.contains("</i>")) {
                                 it.write(line.replace("*", "<i>"))
                                 stack.add("</i>")
                             } else {
-                                it.write(line.replace("*", stack.pop()))
+                                it.write(line.replace("*", "</i>"))
+                                stack.remove("</i>")
                             }
                         } else {
                             it.write(line)
@@ -420,7 +424,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                     newLine += "<s>"
                                     stack.add("</s>")
                                 } else {
-                                    newLine += stack.pop()
+                                    newLine += stack.elementAt(stack.indexOf("</s>"))
+                                    stack.remove("</s>")
                                 }
                                 i += 2
                             } else if (line.substring(i..i + 2) == "***") {
@@ -428,8 +433,24 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                     newLine += "<b><i>"
                                     stack.add("</b>")
                                     stack.add("</i>")
+                                } else if (!stack.contains("</i>") && stack.contains("</b>")) {
+                                    newLine += "</b><i>"
+                                    stack.remove("</b>")
+                                    stack.add("</i>")
+                                } else if (stack.contains("</i>") && !stack.contains("</b>")) {
+                                    newLine += "<i></b>"
+                                    stack.remove("</b>")
+                                    stack.add("</i>")
                                 } else {
-                                    newLine += stack.pop() + stack.pop()
+                                    if (stack.indexOf("</i>") < stack.indexOf("</b>")) {
+                                        newLine += "</b></i>"
+                                        stack.remove("</b>")
+                                        stack.remove("</i>")
+                                    } else {
+                                        newLine += "</i></b>"
+                                        stack.remove("</b>")
+                                        stack.remove("</i>")
+                                    }
                                 }
                                 i += 3
                             } else if (line.substring(i..i + 1) == "**") {
@@ -437,7 +458,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                     newLine += "<b>"
                                     stack.add("</b>")
                                 } else {
-                                    newLine += stack.pop()
+                                    newLine += stack.elementAt(stack.indexOf("</b>"))
+                                    stack.remove("</b>")
                                 }
                                 i += 2
                             } else if (line[i] == '*') {
@@ -445,7 +467,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                     newLine += "<i>"
                                     stack.add("</i>")
                                 } else {
-                                    newLine += stack.pop()
+                                    newLine += stack.elementAt(stack.indexOf("</i>"))
+                                    stack.remove("</i>")
                                 }
                                 i++
                             } else if (line[i] != '*' && line[i] != '~') {
@@ -458,7 +481,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 newLine += "<s>"
                                 stack.add("</s>")
                             } else {
-                                newLine += stack.pop()
+                                newLine += stack.elementAt(stack.indexOf("</s>"))
+                                stack.remove("</s>")
                             }
                         } else if ('~' == line[line.lastIndex - 1]) {
                             if (line[line.lastIndex] == '*') {
@@ -466,7 +490,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                     newLine += "<i>"
                                     stack.add("</i>")
                                 } else {
-                                    newLine += stack.pop()
+                                    newLine += stack.elementAt(stack.indexOf("</i>"))
+                                    stack.remove("</i>")
                                 }
                             } else {
                                 newLine += line[line.lastIndex]
@@ -476,14 +501,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 newLine += "<b>"
                                 stack.add("</b>")
                             } else {
-                                newLine += stack.pop()
+                                newLine += stack.elementAt(stack.indexOf("</b>"))
+                                stack.remove("</b>")
                             }
                         } else if ('*' == line[line.lastIndex - 1] && line[line.lastIndex - 2] != '*') {
                             if (!stack.contains("</i>")) {
                                 newLine += "<i>" + line[line.lastIndex]
                                 stack.add("</i>")
                             } else {
-                                newLine += stack.pop() + line[line.lastIndex]
+                                newLine += stack.elementAt(stack.indexOf("</i>")) + line[line.lastIndex]
+                                stack.remove("</i>")
                             }
                         } else if ('*' == line[line.lastIndex - 1]) {
                             newLine += line[line.lastIndex]
@@ -492,7 +519,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 newLine += line[line.lastIndex - 1] + "<i>"
                                 stack.add("</i>")
                             } else {
-                                newLine += line[line.lastIndex - 1] + stack.pop()
+                                newLine += line[line.lastIndex - 1] + stack.elementAt(stack.indexOf("</i>"))
+                                stack.remove("</i>")
                             }
                         } else {
                             newLine += line.substring(line.lastIndex - 1..line.lastIndex)
