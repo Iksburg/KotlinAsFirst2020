@@ -365,13 +365,13 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         it.write("<html><body><p>")
         for (line in text) {
             val processedLine = line.replace(Regex("\\s"), "")
-            if (firstLine.isBlank() && previousLine.isNotEmpty()) {
+            if (firstLine.isBlank() && previousLine.isNotBlank()) {
                 firstLine = previousLine
             }
-            if (firstLine.isNotEmpty() && previousLine.isBlank() && processedLine.isNotEmpty()) {
+            if (firstLine.isNotBlank() && previousLine.isBlank() && line.isNotBlank()) {
                 it.write("</p><p>")
             }
-            if (processedLine.isNotEmpty()) {
+            if (line.isNotBlank()) {
                 when (line.length) {
                     1 -> {
                         if (line[0] == '*') {
