@@ -14,11 +14,17 @@ package lesson12.task1
  * Класс должен иметь конструктор по умолчанию (без параметров).
  */
 class TableFunction {
+    private var table = mutableListOf<Couple>()
+
+    private class Couple(
+        val x: Double,
+        var y: Double
+    )
 
     /**
      * Количество пар в таблице
      */
-    val size: Int get() = TODO()
+    val size: Int get() = table.size
 
     /**
      * Добавить новую пару.
@@ -26,7 +32,18 @@ class TableFunction {
      * или false, если она уже есть (в этом случае перезаписать значение y)
      */
     fun add(x: Double, y: Double): Boolean {
-        TODO()
+        if (table.size == 0) {
+            table.add(Couple(x, y))
+        } else {
+            for (i in 0 until table.size) {
+                if (x == table[i].x) {
+                    table[i].y = y
+                    return false
+                }
+            }
+            table.add(Couple(x, y))
+        }
+        return true
     }
 
     /**
@@ -34,13 +51,25 @@ class TableFunction {
      * Вернуть true, если пара была удалена.
      */
     fun remove(x: Double): Boolean {
-        TODO()
+        for (i in 0 until table.size) {
+            if (x == table[i].x) {
+                table.removeAt(i)
+                return true
+            }
+        }
+        return false
     }
 
     /**
      * Вернуть коллекцию из всех пар в таблице
      */
-    fun getPairs(): Collection<Pair<Double, Double>> = TODO()
+    fun getPairs(): Collection<Pair<Double, Double>> {
+        val result = mutableListOf<Pair<Double, Double>>()
+        for (i in 0 until table.size) {
+            result.add(Pair(table[i].x, table[i].y))
+        }
+        return result
+    }
 
     /**
      * Вернуть пару, ближайшую к заданному x.
@@ -63,5 +92,27 @@ class TableFunction {
      * Таблицы равны, если в них одинаковое количество пар,
      * и любая пара из второй таблицы входит также и в первую
      */
-    override fun equals(other: Any?): Boolean = TODO()
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TableFunction) return false
+        val firstTable = table
+        val secondTable = other.table
+        var countOfEquals = 0
+        if (firstTable.size != secondTable.size) return false
+        for (i in 0 until firstTable.size) {
+            for (j in 0 until firstTable.size) {
+                if (firstTable[i].x == secondTable[j].x && firstTable[i].y == secondTable[j].y) {
+                    countOfEquals++
+                }
+            }
+        }
+        return countOfEquals == firstTable.size
+    }
+
+    override fun hashCode(): Int {
+        var result = table.hashCode()
+        result = 31 * result + size
+        return result
+    }
+
 }
