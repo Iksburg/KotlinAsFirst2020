@@ -54,13 +54,14 @@ internal class TableFunctionTest {
     @Tag("10")
     fun getValue() {
         val function = TableFunction()
-        try {
+        assertThrows(IllegalStateException::class.java) { function.getValue(0.0) }
+        /* try {
             function.getValue(0.0)
         } catch (ex: IllegalArgumentException) {
             // pass
         } catch (ex: NotImplementedError) {
             throw ex
-        }
+        } */
         function.add(1.0, 2.0)
         assertEquals(2.0, function.getValue(1.5))
         function.add(3.0, 4.0)

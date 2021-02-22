@@ -2,6 +2,8 @@
 
 package lesson12.task1
 
+import kotlin.math.abs
+
 /**
  * Класс "табличная функция".
  *
@@ -76,7 +78,21 @@ class TableFunction {
      * Если существует две ближайшие пары, вернуть пару с меньшим значением x.
      * Если таблица пуста, бросить IllegalStateException.
      */
-    fun findPair(x: Double): Pair<Double, Double>? = TODO()
+    fun findPair(x: Double): Pair<Double, Double>? {
+        if (table.size == 0) {
+            throw IllegalStateException()
+        } else {
+            var minDifValue: Double = Double.MAX_VALUE
+            var result: Pair<Double, Double>? = null
+            for (i in 0 until table.size) {
+                if (abs(x - table[i].x) < minDifValue) {
+                    minDifValue = abs(x - table[i].x)
+                    result = Pair(table[i].x, table[i].y)
+                }
+            }
+            return result
+        }
+    }
 
     /**
      * Вернуть значение y по заданному x.
@@ -86,7 +102,56 @@ class TableFunction {
      * Если существуют две пары, такие, что x1 < x < x2, использовать интерполяцию.
      * Если их нет, но существуют две пары, такие, что x1 < x2 < x или x > x2 > x1, использовать экстраполяцию.
      */
-    fun getValue(x: Double): Double = TODO()
+    fun getValue(x: Double): Double {
+        if (table.size == 0) {
+            throw IllegalStateException()
+        } else if (table.size == 1) {
+            return table[0].y
+        } else {
+            var quantityNumLess = 0
+            var quantityNumMore = 0
+            var firstMinIndex = Integer.MAX_VALUE
+            var secondMinIndex = Integer.MAX_VALUE
+            var firstMaxIndex = Integer.MIN_VALUE
+            var secondMaxIndex = Integer.MIN_VALUE
+            var minFirstValue = Double.MIN_VALUE
+            var maxFirstValue = Double.MAX_VALUE
+            var minSecondValue = Double.MIN_VALUE
+            var maxSecondValue = Double.MAX_VALUE
+            for (i in 0 until table.size) {
+                if (x == table[i].x) return table[i].y
+                if (x > table[i].x) {
+                    quantityNumLess++
+                    if (table[i].x > minFirstValue) {
+                        minSecondValue = minFirstValue
+                        minFirstValue = table[i].x
+                        secondMinIndex = firstMinIndex
+                        firstMinIndex = i
+                    } else if (table[i].x > minSecondValue) {
+                        minSecondValue = table[i].x
+                        secondMinIndex = i
+                    }
+                }
+                if (x < table[i].x) {
+                    quantityNumMore++
+                    if (table[i].x < maxFirstValue) {
+                        maxSecondValue = maxFirstValue
+                        maxFirstValue = table[i].x
+                        secondMaxIndex = firstMaxIndex
+                        firstMaxIndex = i
+                    } else if (table[i].x < maxSecondValue) {
+                        maxSecondValue = table[i].x
+                        secondMaxIndex = i
+                    }
+                }
+            }
+            return when {
+                quantityNumLess > 0 && quantityNumMore > 0 -> (x - minFirstValue) * (table[firstMaxIndex].y - table[firstMinIndex].y) / (maxFirstValue - minFirstValue) + table[firstMinIndex].y
+                quantityNumLess > 1 -> (x - minSecondValue) * (table[firstMinIndex].y - table[secondMinIndex].y) / (minFirstValue - minSecondValue) + table[secondMinIndex].y
+                else -> (x - maxFirstValue) * (table[secondMaxIndex].y - table[firstMaxIndex].y) / (maxSecondValue - maxFirstValue) + table[firstMaxIndex].y
+            }
+        }
+    }
 
     /**
      * Таблицы равны, если в них одинаковое количество пар,
