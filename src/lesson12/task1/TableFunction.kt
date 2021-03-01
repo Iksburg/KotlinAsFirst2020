@@ -16,7 +16,7 @@ import kotlin.math.abs
  * Класс должен иметь конструктор по умолчанию (без параметров).
  */
 class TableFunction {
-    private var table = mutableListOf<Pair<Double, Double>>()
+    private var table = mutableSetOf<Pair<Double, Double>>()
 
     /**
      * Количество пар в таблице
@@ -32,13 +32,15 @@ class TableFunction {
         if (table.size == 0) {
             table.add(Pair(x, y))
         } else {
-            for (i in 0 until table.size) {
-                if (x == table[i].first) {
+            for (pair in table) {
+                if (x == pair.first) {
                     val newPair = Pair(x, y)
-                    table[i] = newPair
+                    table.remove(pair)
+                    table.add(newPair)
                     return false
                 }
             }
+
             table.add(Pair(x, y))
         }
         return true
@@ -49,9 +51,9 @@ class TableFunction {
      * Вернуть true, если пара была удалена.
      */
     fun remove(x: Double): Boolean {
-        for (i in 0 until table.size) {
-            if (x == table[i].first) {
-                table.removeAt(i)
+        for (pair in table) {
+            if (x == pair.first) {
+                table.remove(pair)
                 return true
             }
         }
@@ -63,8 +65,8 @@ class TableFunction {
      */
     fun getPairs(): Collection<Pair<Double, Double>> {
         val result = mutableListOf<Pair<Double, Double>>()
-        for (i in 0 until table.size) {
-            result.add(Pair(table[i].first, table[i].second))
+        for (pair in table) {
+            result.add(pair)
         }
         return result
     }
@@ -80,10 +82,10 @@ class TableFunction {
         } else {
             var minDifValue: Double = Double.MAX_VALUE
             var result: Pair<Double, Double>? = null
-            for (i in 0 until table.size) {
-                if (abs(x - table[i].first) < minDifValue) {
-                    minDifValue = abs(x - table[i].first)
-                    result = Pair(table[i].first, table[i].second)
+            for ((first, second) in table) {
+                if (abs(x - first) < minDifValue) {
+                    minDifValue = abs(x - first)
+                    result = Pair(first, second)
                 }
             }
             return result
@@ -101,7 +103,7 @@ class TableFunction {
     fun getValue(x: Double): Double {
         when (table.size) {
             0 -> throw IllegalStateException()
-            1 -> return table[0].second
+            1 -> return table.first().second
             else -> {
                 var quantityNumLess = 0
                 var quantityNumMore = 0
@@ -113,43 +115,46 @@ class TableFunction {
                 var maxFirstValue = Double.MAX_VALUE
                 var minSecondValue = Double.MIN_VALUE
                 var maxSecondValue = Double.MAX_VALUE
-                for (i in 0 until table.size) {
-                    if (x == table[i].first) return table[i].second
-                    if (x > table[i].first) {
+                for (pair in table) {
+                    if (x == pair.first) return pair.second
+                    if (x > pair.first) {
                         quantityNumLess++
-                        if (table[i].first > minFirstValue) {
+                        if (pair.first > minFirstValue) {
                             minSecondValue = minFirstValue
-                            minFirstValue = table[i].first
+                            minFirstValue = pair.first
                             secondMinIndex = firstMinIndex
-                            firstMinIndex = i
-                        } else if (table[i].first > minSecondValue) {
-                            minSecondValue = table[i].first
-                            secondMinIndex = i
+                            firstMinIndex = table.indexOf(pair)
+                        } else if (pair.first > minSecondValue) {
+                            minSecondValue = pair.first
+                            secondMinIndex = table.indexOf(pair)
                         }
                     }
-                    if (x < table[i].first) {
+                    if (x < pair.first) {
                         quantityNumMore++
-                        if (table[i].first < maxFirstValue) {
+                        if (pair.first < maxFirstValue) {
                             maxSecondValue = maxFirstValue
-                            maxFirstValue = table[i].first
+                            maxFirstValue = pair.first
                             secondMaxIndex = firstMaxIndex
-                            firstMaxIndex = i
-                        } else if (table[i].first < maxSecondValue) {
-                            maxSecondValue = table[i].first
-                            secondMaxIndex = i
+                            firstMaxIndex = table.indexOf(pair)
+                        } else if (pair.first < maxSecondValue) {
+                            maxSecondValue = pair.first
+                            secondMaxIndex = table.indexOf(pair)
                         }
                     }
                 }
                 return when {
                     quantityNumLess > 0 && quantityNumMore > 0 ->
-                        (x - minFirstValue) * (table[firstMaxIndex].second - table[firstMinIndex].second) /
-                                (maxFirstValue - minFirstValue) + table[firstMinIndex].second
+                        (x - minFirstValue) * (table.elementAt(firstMaxIndex).second -
+                                table.elementAt(firstMinIndex).second) /
+                                (maxFirstValue - minFirstValue) + table.elementAt(firstMinIndex).second
                     quantityNumLess > 1 ->
-                        (x - minSecondValue) * (table[firstMinIndex].second - table[secondMinIndex].second) /
-                                (minFirstValue - minSecondValue) + table[secondMinIndex].second
+                        (x - minSecondValue) * (table.elementAt(firstMinIndex).second -
+                                table.elementAt(secondMinIndex).second) /
+                                (minFirstValue - minSecondValue) + table.elementAt(secondMinIndex).second
                     else ->
-                        (x - maxFirstValue) * (table[secondMaxIndex].second - table[firstMaxIndex].second) /
-                                (maxSecondValue - maxFirstValue) + table[firstMaxIndex].second
+                        (x - maxFirstValue) * (table.elementAt(secondMaxIndex).second -
+                                table.elementAt(firstMaxIndex).second) /
+                                (maxSecondValue - maxFirstValue) + table.elementAt(firstMaxIndex).second
                 }
             }
         }
@@ -166,11 +171,9 @@ class TableFunction {
         val secondTable = other.table
         var countOfEquals = 0
         if (firstTable.size != secondTable.size) return false
-        for (i in 0 until firstTable.size) {
-            for (j in 0 until firstTable.size) {
-                if (firstTable[i].first == secondTable[j].first && firstTable[i].second == secondTable[j].second) {
-                    countOfEquals++
-                }
+        for (pair in firstTable) {
+            if (pair in secondTable) {
+                countOfEquals++
             }
         }
         return countOfEquals == firstTable.size
