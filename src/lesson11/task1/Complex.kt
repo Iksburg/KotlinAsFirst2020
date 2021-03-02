@@ -24,14 +24,8 @@ class Complex(val re: Double, val im: Double) {
      * Конструктор из строки вида x+yi
      */
     constructor(s: String) : this(
-        s.substringBefore({
-            if ('+' in s) {
-                '+'
-            } else {
-                '-'
-            }
-        }.toString()).toDouble(),
-        s.substringAfter('-').substringBefore('i').toDouble()
+        Regex("""(-?\d+\.?\d*)""").find(s)?.value.orEmpty().toDouble(),
+        Regex("""(-?\d+\.?\d*i)""").find(s)?.value.orEmpty().substringBefore('i').toDouble()
     )
 
     /**
@@ -67,7 +61,11 @@ class Complex(val re: Double, val im: Double) {
     /**
      * Сравнение на равенство
      */
-    override fun equals(other: Any?): Boolean = TODO()
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Complex) return false
+        return this.re == other.re && this.im == other.im
+    }
 
     /**
      * Преобразование в строку
@@ -79,4 +77,10 @@ class Complex(val re: Double, val im: Double) {
             "+"
         }
     } + this.re.toString())
+
+    override fun hashCode(): Int {
+        var result = re.hashCode()
+        result = 31 * result + im.hashCode()
+        return result
+    }
 }
