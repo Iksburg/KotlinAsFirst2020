@@ -25,7 +25,7 @@ class Complex(val re: Double, val im: Double) {
      */
     constructor(s: String) : this(
         Regex("""(-?\d+\.?\d*)""").find(s)?.value.orEmpty().toDouble(),
-        Regex("""(-?\d+\.?\d*i)""").find(s)?.value.orEmpty().substringBefore('i').toDouble()
+        Regex("""([-+]\d+\.?\d*i)""").find(s)?.value.orEmpty().substringBefore('i').toDouble()
     )
 
     /**
