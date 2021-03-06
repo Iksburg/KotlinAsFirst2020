@@ -16,7 +16,7 @@ import kotlin.math.abs
  * Класс должен иметь конструктор по умолчанию (без параметров).
  */
 class TableFunction {
-    private var table = mutableSetOf<Pair<Double, Double>>()
+    private var table = mutableMapOf<Double, Double>()
 
     /**
      * Количество пар в таблице
@@ -29,19 +29,16 @@ class TableFunction {
      * или false, если она уже есть (в этом случае перезаписать значение y)
      */
     fun add(x: Double, y: Double): Boolean {
-        if (table.size == 0) {
-            table.add(Pair(x, y))
+        if (table.isEmpty()) {
+            table[x] = y
         } else {
-            for (pair in table) {
-                if (x == pair.first) {
-                    val newPair = Pair(x, y)
-                    table.remove(pair)
-                    table.add(newPair)
+            for (key in table.keys) {
+                if (x == key) {
+                    table[key] = y
                     return false
                 }
             }
-
-            table.add(Pair(x, y))
+            table[x] = y
         }
         return true
     }
@@ -51,9 +48,9 @@ class TableFunction {
      * Вернуть true, если пара была удалена.
      */
     fun remove(x: Double): Boolean {
-        for (pair in table) {
-            if (x == pair.first) {
-                table.remove(pair)
+        for (key in table.keys) {
+            if (x == key) {
+                table.remove(key)
                 return true
             }
         }
@@ -63,13 +60,8 @@ class TableFunction {
     /**
      * Вернуть коллекцию из всех пар в таблице
      */
-    fun getPairs(): Collection<Pair<Double, Double>> {
-        val result = mutableListOf<Pair<Double, Double>>()
-        for (pair in table) {
-            result.add(pair)
-        }
-        return result
-    }
+    fun getPairs(): Collection<Pair<Double, Double>> = table.toList()
+
 
     /**
      * Вернуть пару, ближайшую к заданному x.
@@ -77,7 +69,7 @@ class TableFunction {
      * Если таблица пуста, бросить IllegalStateException.
      */
     fun findPair(x: Double): Pair<Double, Double>? {
-        if (table.size == 0) {
+        if (table.isEmpty()) {
             throw IllegalStateException()
         } else {
             var minDifValue: Double = Double.MAX_VALUE
@@ -103,58 +95,57 @@ class TableFunction {
     fun getValue(x: Double): Double {
         when (table.size) {
             0 -> throw IllegalStateException()
-            1 -> return table.first().second
+            1 -> {
+                var newValue = 0.0
+                for (value in table.values) newValue = value
+                return newValue
+            }
             else -> {
                 var quantityNumLess = 0
                 var quantityNumMore = 0
-                var firstMinIndex = Integer.MAX_VALUE
-                var secondMinIndex = Integer.MAX_VALUE
-                var firstMaxIndex = Integer.MIN_VALUE
-                var secondMaxIndex = Integer.MIN_VALUE
-                var minFirstValue = Double.MIN_VALUE
-                var maxFirstValue = Double.MAX_VALUE
-                var minSecondValue = Double.MIN_VALUE
-                var maxSecondValue = Double.MAX_VALUE
-                for (pair in table) {
-                    if (x == pair.first) return pair.second
-                    if (x > pair.first) {
+                var minFirstKey = Double.MIN_VALUE
+                var maxFirstKey = Double.MAX_VALUE
+                var minSecondKey = Double.MIN_VALUE
+                var maxSecondKey = Double.MAX_VALUE
+                for ((key, value) in table) {
+                    if (x == key) return value
+                    if (x > key) {
                         quantityNumLess++
-                        if (pair.first > minFirstValue) {
-                            minSecondValue = minFirstValue
-                            minFirstValue = pair.first
-                            secondMinIndex = firstMinIndex
-                            firstMinIndex = table.indexOf(pair)
-                        } else if (pair.first > minSecondValue) {
-                            minSecondValue = pair.first
-                            secondMinIndex = table.indexOf(pair)
+                        if (key > minFirstKey) {
+                            minSecondKey = minFirstKey
+                            minFirstKey = key
+                        } else if (key > minSecondKey) {
+                            minSecondKey = key
                         }
                     }
-                    if (x < pair.first) {
+                    if (x < key) {
                         quantityNumMore++
-                        if (pair.first < maxFirstValue) {
-                            maxSecondValue = maxFirstValue
-                            maxFirstValue = pair.first
-                            secondMaxIndex = firstMaxIndex
-                            firstMaxIndex = table.indexOf(pair)
-                        } else if (pair.first < maxSecondValue) {
-                            maxSecondValue = pair.first
-                            secondMaxIndex = table.indexOf(pair)
+                        if (key < maxFirstKey) {
+                            maxSecondKey = maxFirstKey
+                            maxFirstKey = key
+                        } else if (key < maxSecondKey) {
+                            maxSecondKey = key
                         }
                     }
                 }
+                val minFirstValue = table[minFirstKey]
+                val minSecondValue = table[minSecondKey]
+                val maxFirstValue = table[maxFirstKey]
+                val maxSecondValue = table[maxSecondKey]
                 return when {
-                    quantityNumLess > 0 && quantityNumMore > 0 ->
-                        (x - minFirstValue) * (table.elementAt(firstMaxIndex).second -
-                                table.elementAt(firstMinIndex).second) /
-                                (maxFirstValue - minFirstValue) + table.elementAt(firstMinIndex).second
-                    quantityNumLess > 1 ->
-                        (x - minSecondValue) * (table.elementAt(firstMinIndex).second -
-                                table.elementAt(secondMinIndex).second) /
-                                (minFirstValue - minSecondValue) + table.elementAt(secondMinIndex).second
-                    else ->
-                        (x - maxFirstValue) * (table.elementAt(secondMaxIndex).second -
-                                table.elementAt(firstMaxIndex).second) /
-                                (maxSecondValue - maxFirstValue) + table.elementAt(firstMaxIndex).second
+                    quantityNumLess > 0 && quantityNumMore > 0 && maxFirstValue != null && minFirstValue != null ->
+                        (x - minFirstKey) * (maxFirstValue - minFirstValue) /
+                                (maxFirstKey - minFirstKey) + minFirstValue
+                    quantityNumLess > 1 && maxFirstValue != null && minSecondValue != null ->
+                        (x - minSecondKey) * (maxFirstValue - minSecondValue) /
+                                (minFirstKey - minSecondKey) + minSecondValue
+                    else -> {
+                        if (maxSecondValue != null && maxFirstValue != null) {
+                            (x - maxFirstKey) * (maxSecondValue - maxFirstValue) / (maxSecondKey - maxFirstKey) + maxFirstValue
+                        } else {
+                            throw IllegalArgumentException()
+                        }
+                    }
                 }
             }
         }
@@ -169,14 +160,7 @@ class TableFunction {
         if (other !is TableFunction) return false
         val firstTable = table
         val secondTable = other.table
-        var countOfEquals = 0
-        if (firstTable.size != secondTable.size) return false
-        for (pair in firstTable) {
-            if (pair in secondTable) {
-                countOfEquals++
-            }
-        }
-        return countOfEquals == firstTable.size
+        return firstTable == secondTable
     }
 
     override fun hashCode(): Int {
@@ -184,5 +168,4 @@ class TableFunction {
         result = 31 * result + size
         return result
     }
-
 }
