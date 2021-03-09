@@ -141,7 +141,8 @@ class TableFunction {
                                 (minFirstKey - minSecondKey) + minSecondValue
                     else -> {
                         if (maxSecondValue != null && maxFirstValue != null) {
-                            (x - maxFirstKey) * (maxSecondValue - maxFirstValue) / (maxSecondKey - maxFirstKey) + maxFirstValue
+                            (x - maxFirstKey) * (maxSecondValue - maxFirstValue) /
+                                    (maxSecondKey - maxFirstKey) + maxFirstValue
                         } else {
                             throw IllegalArgumentException()
                         }
@@ -158,9 +159,7 @@ class TableFunction {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is TableFunction) return false
-        val firstTable = table
-        val secondTable = other.table
-        return firstTable == secondTable
+        return table == other.table
     }
 
     override fun hashCode(): Int {
