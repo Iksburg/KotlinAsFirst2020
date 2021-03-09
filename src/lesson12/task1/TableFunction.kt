@@ -16,7 +16,7 @@ import kotlin.math.abs
  * Класс должен иметь конструктор по умолчанию (без параметров).
  */
 class TableFunction {
-    private var table = mutableMapOf<Double, Double>()
+    private val table = mutableMapOf<Double, Double>()
 
     /**
      * Количество пар в таблице
@@ -32,11 +32,9 @@ class TableFunction {
         if (table.isEmpty()) {
             table[x] = y
         } else {
-            for (key in table.keys) {
-                if (x == key) {
-                    table[key] = y
-                    return false
-                }
+            if (x in table) {
+                table[x] = y
+                return false
             }
             table[x] = y
         }
@@ -48,11 +46,9 @@ class TableFunction {
      * Вернуть true, если пара была удалена.
      */
     fun remove(x: Double): Boolean {
-        for (key in table.keys) {
-            if (x == key) {
-                table.remove(key)
-                return true
-            }
+        if (x in table) {
+            table.remove(x)
+            return true
         }
         return false
     }
@@ -95,11 +91,7 @@ class TableFunction {
     fun getValue(x: Double): Double {
         when (table.size) {
             0 -> throw IllegalStateException()
-            1 -> {
-                var newValue = 0.0
-                for (value in table.values) newValue = value
-                return newValue
-            }
+            1 -> return table.values.first()
             else -> {
                 var quantityNumLess = 0
                 var quantityNumMore = 0
